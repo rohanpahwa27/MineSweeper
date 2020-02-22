@@ -13,12 +13,13 @@ class KB():
     numIdentMines: int #num of identified mines (should be <= numMines)
     numHidden: int #num of hidden squares
 
+dim = 10
+num_mines = 5
+#fills a matrix of size dim*dim with num_mines many mines
 def createMine():
-    dim = 10
-    num_mines = 5
-    random_matrix = np.zeros((dim,dim),dtype=np.int)
-    #random_matrix = np.random.randint(1,size=(dim,dim))
 
+    #random_matrix = np.random.randint(1,size=(dim,dim))
+    random_matrix = np.zeros((dim, dim), dtype=np.int)
     mine_location = set()
     #for i in range(0, num_mines):
     while len(mine_location)!= num_mines:
