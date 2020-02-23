@@ -2,8 +2,7 @@
 
 import numpy as np
 from dataclasses import dataclass
-
-
+import pygame
 
 @dataclass
 class KB():
@@ -76,11 +75,43 @@ for i in range(0, dim):
             mine_num = countMines(i,j,matrix)
             matrix[i, j] = mine_num
 
-print("---------ANSWER-------KEY-----------------------")
+print("---------ANSWER-----------KEY--------------------")
 print(matrix)
-
-
 
 kb1 = KB(True,0,0,0,0)
 print(kb1)
 print(kb1.mine)
+
+
+
+#DISPLAY GRAPHICS
+pygame.init()
+
+#set up drawing window
+screen = pygame.display.set_mode([520,520])
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            running = False
+
+    screen.fill((255,255,255)) #fill background with white
+
+    white = (0,0,0)
+    pygame.draw.rect(screen, white, (10,10,500,500),2)
+
+    width = int(500/dim)
+    for i in range(int(500/dim), 500, int(500/dim)):
+        pygame.draw.line(screen, white,(i+10,10),(i+10,510))
+        pygame.draw.line(screen, white,(10,i+10),(510,i+10))
+
+    radius = int(width/3)
+    for i in range(0, dim):
+        for j in range(0, dim):
+            if(matrix[i,j] == 9):
+                pygame.draw.circle(screen, white, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
+
+
+    pygame.display.flip()
+
+pygame.quit()
