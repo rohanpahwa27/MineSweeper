@@ -97,21 +97,29 @@ while running:
 
     screen.fill((255,255,255)) #fill background with white
 
-    white = (0,0,0)
-    pygame.draw.rect(screen, white, (10,10,500,500),2)
+    black = (0,0,0)
+    pygame.draw.rect(screen, black, (10,10,500,500),2)
 
     width = int(500/dim)
     for i in range(int(500/dim), 500, int(500/dim)):
-        pygame.draw.line(screen, white,(i+10,10),(i+10,510))
-        pygame.draw.line(screen, white,(10,i+10),(510,i+10))
+        pygame.draw.line(screen, black,(i+10,10),(i+10,510))
+        pygame.draw.line(screen, black,(10,i+10),(510,i+10))
 
     radius = int(width/3)
     for i in range(0, dim):
         for j in range(0, dim):
             if(matrix[i,j] == 9):
-                pygame.draw.circle(screen, white, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
-
+                si = 10+(i*width)
+                sj = 10+(j*width)
+                pygame.draw.circle(screen, black, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
+                pygame.draw.polygon(screen, black, ((si+width/2,sj+(width/10)),(si+(width/3),sj+(width/4)),(si+(2*width/3),sj+(width/4)))) #top triangle
+                pygame.draw.polygon(screen, black, ((si+width/2,sj+(9*width/10)),(si+(width/3),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom triangle
+                pygame.draw.polygon(screen, black, ((si+(2*width/3),sj+(width/4)),(si+(5*width/6),sj+(width/4)),(si+(3*width/4),sj+(width/2)))) #top right
+                pygame.draw.polygon(screen, black, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
+                pygame.draw.polygon(screen, black, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
+                pygame.draw.polygon(screen, black, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
 
     pygame.display.flip()
+
 
 pygame.quit()
