@@ -6,7 +6,7 @@ import pygame
 
 @dataclass
 class KB():
-    mine: bool #1 if it is a mine, 0 if it is safe, 2 if it is hidden
+    mine: int #0 if hidden, 1 if mine, 2 if safe, 3 if flag
     numMines: int #num of surrounding mines
     numSafe: int #num of surrounding safe squares (should =
     numIdentMines: int #num of identified mines (should be <= numMines)
@@ -78,7 +78,7 @@ for i in range(0, dim):
 print("---------ANSWER-----------KEY--------------------")
 print(matrix)
 
-kb1 = KB(True,0,0,0,0)
+kb1 = KB(0,0,0,0,0)
 print(kb1)
 print(kb1.mine)
 
@@ -90,6 +90,10 @@ pygame.init()
 #set up drawing window
 screen = pygame.display.set_mode([520,520])
 running = True
+
+font = pygame.font.SysFont("arial", 36)
+
+#run the game
 while running:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -97,27 +101,39 @@ while running:
 
     screen.fill((255,255,255)) #fill background with white
 
-    black = (0,0,0)
-    pygame.draw.rect(screen, black, (10,10,500,500),2)
-
+    #define variables
     width = int(500/dim)
+    black = (0,0,0)
+    orange = (255,69,0)
+    green = (0,100,0)
+
+    #draw grid
+    pygame.draw.rect(screen, black, (10,10,500,500),2)
     for i in range(int(500/dim), 500, int(500/dim)):
         pygame.draw.line(screen, black,(i+10,10),(i+10,510))
         pygame.draw.line(screen, black,(10,i+10),(510,i+10))
 
-    radius = int(width/3)
+
+    #draw mines
+    radius = int(width/3) #radius of mine
     for i in range(0, dim):
         for j in range(0, dim):
             if(matrix[i,j] == 9):
                 si = 10+(i*width)
                 sj = 10+(j*width)
-                pygame.draw.circle(screen, black, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
-                pygame.draw.polygon(screen, black, ((si+width/2,sj+(width/10)),(si+(width/3),sj+(width/4)),(si+(2*width/3),sj+(width/4)))) #top triangle
-                pygame.draw.polygon(screen, black, ((si+width/2,sj+(9*width/10)),(si+(width/3),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom triangle
-                pygame.draw.polygon(screen, black, ((si+(2*width/3),sj+(width/4)),(si+(5*width/6),sj+(width/4)),(si+(3*width/4),sj+(width/2)))) #top right
-                pygame.draw.polygon(screen, black, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
-                pygame.draw.polygon(screen, black, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
-                pygame.draw.polygon(screen, black, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
+                pygame.draw.circle(screen, orange, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
+                pygame.draw.polygon(screen, orange, ((si+width/2,sj+(width/10)),(si+(width/3),sj+(width/4)),(si+(2*width/3),sj+(width/4)))) #top triangle
+                pygame.draw.polygon(screen, orange, ((si+width/2,sj+(9*width/10)),(si+(width/3),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom triangle
+                pygame.draw.polygon(screen, orange, ((si+(2*width/3),sj+(width/4)),(si+(5*width/6),sj+(width/4)),(si+(3*width/4),sj+(width/2)))) #top right
+                pygame.draw.polygon(screen, orange, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
+                pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
+                pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
+            if(matrix[i,j] >= 0 and matrix[i,j] <= 8):
+                #draw numbers in boxes
+                text = font.render(str(matrix[i][j]), True, green)
+                screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
+
+
 
     pygame.display.flip()
 
