@@ -3,6 +3,9 @@
 import numpy as np
 from dataclasses import dataclass
 import pygame
+import random
+from pprint import pprint
+
 
 @dataclass
 class KB():
@@ -164,10 +167,59 @@ while running:
                 #draw numbers in box
                 text = font.render(str(matrix[i][j]), True, color)
                 screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
-
-
-
     pygame.display.flip()
+
+
+
+
+#START game
+# MAKE AN ARRAY OF EMPTY KBS THAT THE AI USES
+
+playboard = np.empty(shape=(dim,dim), dtype=object)
+for o in range(0, dim):
+    for p in range(0, dim):
+        KBTemp= KB(0,0,0,0,0)
+        playboard[o][p]= KBTemp
+#print (playboard)
+
+# initilize set of random numbers
+randomspots= set()
+v = random.randint(0,9)
+w = random.randint(0,9)
+
+# method to count how many identified mines
+'''
+def updateBlock(x, y, playboard):
+    #check all 8 spots around
+    #edge cases
+    if
+'''
+
+
+
+
+# go through the board and update KB:
+minesfound=0
+matrix_cpy = matrix
+for l in range(0, dim):
+    for m in range(0, dim):
+        while (dim*v + w) in randomspots:
+            v = random.randint(0,9)
+            w = random.randint(0,9)
+        randomspots.add(dim*v+w)
+        #print (v,w)
+        if matrix[v,w]==9:
+
+            minesfound= minesfound+1
+            playboard[v,w].mine = 1
+            playboard[v,w].numMines = 9
+        else:
+            playboard[v,w].numMines = matrix[v,w]
+            playboard[v,w].mine = 2
+        #print(playboard[v,w])
+print (playboard)
+
+
 
 
 pygame.quit()
