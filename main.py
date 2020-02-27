@@ -82,6 +82,27 @@ kb1 = KB(0,0,0,0,0)
 print(kb1)
 print(kb1.mine)
 
+#START game
+# MAKE AN ARRAY OF EMPTY KBS THAT THE AI USES
+playboard = np.full((dim, dim), KB(0,0,0,0,0))
+#pprint (playboard)
+
+# go through the board and update KB:
+minesfound=0
+
+matrix_cpy = matrix
+print (matrix)
+for v in range(0, dim):
+    for w in range(0, dim):
+        print (matrix[v,w])
+        if matrix[v,w]==9:
+            minesfound= minesfound+1
+            playboard[v,w].mine = 1
+        else:
+            playboard[v,w].numMines = matrix[v,w]
+            playboard[v,w].mine = 2
+        print(playboard[v,w])
+print (playboard)
 
 
 #DISPLAY GRAPHICS
@@ -106,6 +127,7 @@ while running:
     black = (0,0,0)
     orange = (255,69,0)
     green = (0,100,0)
+    blue = (0,0,128)
 
     #draw grid
     pygame.draw.rect(screen, black, (10,10,500,500),2)
@@ -128,9 +150,19 @@ while running:
                 pygame.draw.polygon(screen, orange, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
                 pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
                 pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
+
             if(matrix[i,j] >= 0 and matrix[i,j] <= 8):
-                #draw numbers in boxes
-                text = font.render(str(matrix[i][j]), True, green)
+                color = green
+            if(matrix[i,j] == 0):
+                color = black
+            if(matrix[i,j] == 1):
+                color = green
+            if(matrix[i,j] == 2):
+                color = blue
+            #add colors for rest of numbers
+            if(matrix[i,j] >= 0 and matrix[i,j] <= 8):
+                #draw numbers in box
+                text = font.render(str(matrix[i][j]), True, color)
                 screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
 
 
