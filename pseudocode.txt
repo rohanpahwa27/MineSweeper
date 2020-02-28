@@ -1,0 +1,32 @@
+bfs - add update kb for numbers found
+
+while list is not empty:
+    solve_sweep
+
+def solve_sweep:
+    click random
+
+    if 0: 
+        bfs()
+    else:
+        update coord in KB
+        mark safe or mine
+
+
+    while list size changes:
+        check for list size
+        for coords in list:
+            if safe:
+                if numMines - numIdentMines = numHidden:
+                    make all numHidden as flags
+                    remove flags from list
+                    remove coord from list 
+
+                    for all neighbors of flags:
+                        numHidden--
+                        numIdentMines++
+
+        check for size of list
+            if same
+                ABORT MISSION ABORT!!! (return lol)
+

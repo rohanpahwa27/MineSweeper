@@ -38,7 +38,7 @@ def display_graphics(matrix, dim):
         radius = int(width/3) #radius of mine
         for i in range(0, dim):
             for j in range(0, dim):
-                if(matrix[i,j] == 9):
+                if(matrix[j,i] == 9):
                     si = 10+(i*width)
                     sj = 10+(j*width)
                     pygame.draw.circle(screen, orange, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
@@ -49,18 +49,20 @@ def display_graphics(matrix, dim):
                     pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
                     pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
 
-                if(matrix[i,j] >= 0 and matrix[i,j] <= 8):
+                if(matrix[j,i] >= 0 and matrix[j,i] <= 8):
                     color = green
-                if(matrix[i,j] == 0):
+                if(matrix[j,i] == 0):
                     color = black
-                if(matrix[i,j] == 1):
+                if(matrix[j,i] == 1):
                     color = green
-                if(matrix[i,j] == 2):
+                if(matrix[j,i] == 2):
+                    color = blue
+                if(matrix[j,i] == -1):
                     color = blue
                 #add colors for rest of numbers
-                if(matrix[i,j] >= 0 and matrix[i,j] <= 8):
+                if(matrix[j,i] >= -1 and matrix[j,i] <= 8):
                     #draw numbers in box
-                    text = font.render(str(matrix[i][j]), True, color)
+                    text = font.render(str(matrix[j,i]), True, color)
                     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
         pygame.display.flip()
 

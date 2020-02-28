@@ -12,13 +12,143 @@ import graphicsAk
 class KB():
     mine: int #0 if hidden, 1 if mine, 2 if safe, 3 if flag
     numMines: int #num of surrounding mines
-    numSafe: int #num of surrounding safe squares (should =
+    numSafe: int #num of surrounding safe squares
     numIdentMines: int #num of identified mines (should be <= numMines)
     numHidden: int #num of hidden squares
 
 dim = 10
-num_mines = 5
+num_mines = 10
 #fills a matrix of size dim*dim with num_mines many mines
+
+def setHidden(playboard):
+    for i in range(1,dim-1):
+        for j in range(1,dim-1):
+            playboard[i,j].numHidden = 8
+
+    playboard[0,0].numHidden = 3
+    playboard[0,dim-1].numHidden = 3
+    playboard[dim-1,0].numHidden = 3
+    playboard[dim-1,dim-1].numHidden = 3
+
+    for i in range(1,dim-1):
+        playboard[0,i].numHidden = 5
+        playboard[i,0].numHidden = 5
+        playboard[dim-1,i].numHidden = 5
+        playboard[i,dim-1].numHidden = 5
+
+def updateKB(coord):
+    x = coord[0]
+    y = coord[1]
+    if (matrix[x,y] == 9):
+        playboard[x,y].mine = 1
+        if (isValid(x+1,y)):
+            playboard[x+1,y].numIdentMines+=1
+            playboard[x+1,y].numHidden-=1
+        if (isValid(x+1,y+1)):
+            playboard[x+1,y+1].numIdentMines+=1
+            playboard[x+1,y+1].numHidden-=1
+        if (isValid(x,y+1)):
+            playboard[x,y+1].numIdentMines+=1
+            playboard[x,y+1].numHidden-=1
+        if (isValid(x-1,y+1)):
+            playboard[x-1,y+1].numIdentMines+=1
+            playboard[x-1,y+1].numHidden-=1
+        if(isValid(x-1,y)):
+            playboard[x-1,y].numIdentMines+=1
+            playboard[x-1,y].numHidden-=1
+        if (isValid(x-1,y-1)):
+            playboard[x-1,y-1].numIdentMines+=1
+            playboard[x-1,y-1].numHidden-=1
+        if (isValid(x,y-1)):
+            playboard[x,y-1].numIdentMines+=1
+            playboard[x,y-1].numHidden-=1
+        if (isValid(x+1,y-1)):
+            playboard[x+1,y-1].numIdentMines+=1
+            playboard[x+1,y-1].numHidden-=1
+    else:
+        playboard[x,y].mine = 2
+        if (isValid(x+1,y)):
+            playboard[x+1,y].numSafe+=1
+            playboard[x+1,y].numHidden-=1
+        if (isValid(x+1,y+1)):
+            playboard[x+1,y+1].numSafe+=1
+            playboard[x+1,y+1].numHidden-=1
+        if (isValid(x,y+1)):
+            playboard[x,y+1].numSafe+=1
+            playboard[x,y+1].numHidden-=1
+        if (isValid(x-1,y+1)):
+            playboard[x-1,y+1].numSafe+=1
+            playboard[x-1,y+1].numHidden-=1
+        if(isValid(x-1,y)):
+            playboard[x-1,y].numSafe+=1
+            playboard[x-1,y].numHidden-=1
+        if (isValid(x-1,y-1)):
+            playboard[x-1,y-1].numSafe+=1
+            playboard[x-1,y-1].numHidden-=1
+        if (isValid(x,y-1)):
+            playboard[x,y-1].numSafe+=1
+            playboard[x,y-1].numHidden-=1
+        if (isValid(x+1,y-1)):
+            playboard[x+1,y-1].numSafe+=1
+            playboard[x+1,y-1].numHidden-=1
+
+    
+
+
+def bfs_from_0(bfs_test, start): #start has to be in format (i,j) as a tuple
+    explored = set()
+    queue = [start]
+
+    while queue:
+        node = queue.pop(0)
+        x = node[0]
+        y = node[1]
+        updateKB((x,y))
+        if node not in explored:
+            explored.add(node)
+            if (isValid(x+1,y)):
+                if (matrix[x+1,y] == 0):
+                    queue.append((x+1,y))
+                bfs_test[x+1,y] = matrix[x+1,y]
+
+            if (isValid(x+1,y+1)):
+                if (matrix[x+1,y+1] == 0):
+                    queue.append((x+1,y+1))
+                bfs_test[x+1,y+1] = matrix[x+1,y+1]
+
+            if (isValid(x,y+1)):
+                if (matrix[x,y+1] == 0):
+                    queue.append((x,y+1))
+                bfs_test[x,y+1] = matrix[x,y+1]
+
+            if (isValid(x-1,y+1)):
+                if (matrix[x-1,y+1] == 0):
+                    queue.append((x-1,y+1))
+                bfs_test[x-1,y+1] = matrix[x-1,y+1]
+
+            if(isValid(x-1,y)):
+                if (matrix[x-1,y] == 0):
+                    queue.append((x-1,y))
+                bfs_test[x-1,y] = matrix[x-1,y]
+
+            if (isValid(x-1,y-1)):
+                if (matrix[x-1,y-1] == 0):
+                    queue.append((x-1,y-1))
+                bfs_test[x-1,y-1] = matrix[x-1,y-1]
+
+            if (isValid(x,y-1)):
+                if (matrix[x,y-1] == 0):
+                    queue.append((x,y-1))
+                bfs_test[x,y-1] = matrix[x,y-1]
+
+            if (isValid(x+1,y-1)):
+                if (matrix[x+1,y-1] == 0):
+                    queue.append((x+1,y-1))
+                bfs_test[x+1,y-1] = matrix[x+1,y-1]
+
+    return bfs_test
+
+
 def createMine():
 
     #random_matrix = np.random.randint(1,size=(dim,dim))
@@ -89,11 +219,12 @@ print(kb1.mine)
 # START game
 # MAKE AN ARRAY OF EMPTY KBS THAT THE AI USES
 
-# playboard = np.empty(shape=(dim,dim), dtype=object)
-# for o in range(0, dim):
-#     for p in range(0, dim):
-#         KBTemp= KB(0,0,0,0,0)
-#         playboard[o][p]= KBTemp
+playboard = np.empty(shape=(dim,dim), dtype=object)
+for o in range(0, dim):
+    for p in range(0, dim):
+        KBTemp= KB(0,0,0,0,0)
+        playboard[o][p]= KBTemp
+setHidden(playboard)
 # #print (playboard)
 #
 #
@@ -200,7 +331,31 @@ print(kb1.mine)
 #
 # pygame.quit()
 
+# ans_board = matrix
+# ans_board.fill(-1)
+#graphicsAk.display_graphics(ans_board, dim)
 
+v = random.randint(0,dim-1)
+w = random.randint(0,dim-1)
+bfsTest = np.zeros((dim, dim), dtype=np.int)
+bfsTest.fill(-1)
+bfsTest[v,w] = matrix[v,w]
+if (matrix[v,w] == 9):
+    playboard[v,w].mine = 1
+else:
+    playboard[v,w].mine = 2
+print((v,w))
+# ans_board[v,w] = matrix[v,w]
+while(matrix[v,w] != 0):
+    v = random.randint(0,dim-1)
+    w = random.randint(0,dim-1)
+    bfsTest[v,w] = matrix[v,w]
+    print((v,w))
+# ans_board = bfs_from_0((v,w))
 
-graphicsAk.display_graphics(matrix, dim)
-#graphics.display_graphics(playboard, dim)
+bfsTest = bfs_from_0(bfsTest, (v,w))
+
+print(playboard)
+
+graphicsAk.display_graphics(bfsTest, dim)
+#graphics.display_graphics(testBFS, dim)
