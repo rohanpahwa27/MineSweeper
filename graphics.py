@@ -7,7 +7,7 @@ def display_graphics(matrix, dim):
     #set up drawing window
     screen = pygame.display.set_mode([520,520])
 
-    pygame.display.set_caption("Answer Key")
+    pygame.display.set_caption("Game Board")
     running = True
 
     font = pygame.font.SysFont("arial", 36)
@@ -26,6 +26,7 @@ def display_graphics(matrix, dim):
         orange = (255,69,0)
         green = (0,100,0)
         blue = (0,0,128)
+        purple = (128,0,128)
 
         #draw grid
         pygame.draw.rect(screen, black, (10,10,500,500),2)
@@ -38,7 +39,10 @@ def display_graphics(matrix, dim):
         radius = int(width/3) #radius of mine
         for i in range(0, dim):
             for j in range(0, dim):
-                if(matrix[j,i] == 9):
+                if(matrix[j,i]).num == -1:
+                    text = font.render("?", True, purple)
+                    screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
+                if(matrix[j,i].num == 9):
                     si = 10+(i*width)
                     sj = 10+(j*width)
                     pygame.draw.circle(screen, orange, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
@@ -49,20 +53,18 @@ def display_graphics(matrix, dim):
                     pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
                     pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
 
-                if(matrix[j,i].numHidden >= 0 and matrix[j,i].numHidden <= 8):
+                if(matrix[j,i].num >= 0 and matrix[j,i].num <= 8):
                     color = green
-                if(matrix[j,i].numHidden == 0):
+                if(matrix[j,i].num == 0):
                     color = black
-                if(matrix[j,i].numHidden == 1):
+                if(matrix[j,i].num == 1):
                     color = green
-                if(matrix[j,i].numHidden == 2):
-                    color = blue
-                if(matrix[j,i].numHidden == -1):
+                if(matrix[j,i].num == 2):
                     color = blue
                 #add colors for rest of numbers
-                if(matrix[j,i].numHidden >= -1 and matrix[j,i].numHidden <= 8):
+                if(matrix[j,i].num >= 0 and matrix[j,i].num <= 8):
                     #draw numbers in box
-                    text = font.render(str(matrix[j,i].numHidden), True, color)
+                    text = font.render(str(matrix[j,i].num), True, color)
                     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
         pygame.display.flip()
 

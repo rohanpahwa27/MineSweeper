@@ -1,6 +1,7 @@
 bfs - add update kb for numbers found
 
-while list is not empty:
+
+while set is not empty:
     solve_sweep
 
 def solve_sweep:
@@ -13,20 +14,24 @@ def solve_sweep:
         mark safe or mine
 
 
-    while list size changes:
-        check for list size
-        for coords in list:
+    while set size changes:
+        check for set size
+        for coords in set:
             if safe:
                 if numMines - numIdentMines = numHidden:
+                    updatekb
                     make all numHidden as flags
-                    remove flags from list
-                    remove coord from list 
+                    remove flags from set
+                    remove coord from set
+                if (numMines = numIdentMines):
+                    updatekb
+                    mark all hidden neighbors as safe
+                    remove from set
 
-                    for all neighbors of flags:
-                        numHidden--
-                        numIdentMines++
+                    if neighbor is 0:
+                        send to bfs
 
-        check for size of list
+        check for size of set
             if same
                 ABORT MISSION ABORT!!! (return lol)
 

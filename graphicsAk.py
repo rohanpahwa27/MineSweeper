@@ -38,6 +38,9 @@ def display_graphics(matrix, dim):
         radius = int(width/3) #radius of mine
         for i in range(0, dim):
             for j in range(0, dim):
+                # if(matrix[j,i]).mine == 0:
+                #     text = font.render("?", True, black)
+                #     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
                 if(matrix[j,i] == 9):
                     si = 10+(i*width)
                     sj = 10+(j*width)
