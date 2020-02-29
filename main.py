@@ -67,32 +67,50 @@ def updateKB(coord):
             playboard[x+1,y-1].numHidden-=1
     else:
         playboard[x,y].mine = 2
+        playboard[x,y].numMines = matrix[x,y]
+        print(matrix[x,y])
         if (isValid(x+1,y)):
             playboard[x+1,y].numSafe+=1
             playboard[x+1,y].numHidden-=1
+            playboard[x+1,y].mine = 2
+            playboard[x+1,y].numMines = matrix[x+1,y]
         if (isValid(x+1,y+1)):
             playboard[x+1,y+1].numSafe+=1
             playboard[x+1,y+1].numHidden-=1
+            playboard[x+1,y+1].mine = 2
+            playboard[x+1,y+1].numMines = matrix[x+1,y+1]
         if (isValid(x,y+1)):
             playboard[x,y+1].numSafe+=1
             playboard[x,y+1].numHidden-=1
+            playboard[x,y+1].mine = 2
+            playboard[x,y+1].numMines = matrix[x,y+1]
         if (isValid(x-1,y+1)):
             playboard[x-1,y+1].numSafe+=1
             playboard[x-1,y+1].numHidden-=1
+            playboard[x-1,y+1].mine = 2
+            playboard[x-1,y+1].numMines = matrix[x-1,y+1]
         if(isValid(x-1,y)):
             playboard[x-1,y].numSafe+=1
             playboard[x-1,y].numHidden-=1
+            playboard[x-1,y].mine = 2
+            playboard[x-1,y].numMines = matrix[x-1,y]
         if (isValid(x-1,y-1)):
             playboard[x-1,y-1].numSafe+=1
             playboard[x-1,y-1].numHidden-=1
+            playboard[x-1,y-1].mine = 2
+            playboard[x-1,y-1].numMines = matrix[x-1,y-1]
         if (isValid(x,y-1)):
             playboard[x,y-1].numSafe+=1
             playboard[x,y-1].numHidden-=1
+            playboard[x,y-1].mine = 2
+            playboard[x,y-1].numMines = matrix[x,y-1]
         if (isValid(x+1,y-1)):
             playboard[x+1,y-1].numSafe+=1
             playboard[x+1,y-1].numHidden-=1
+            playboard[x+1,y-1].mine = 2
+            playboard[x+1,y-1].numMines = matrix[x+1,y-1]
 
-    
+
 
 
 def bfs_from_0(bfs_test, start): #start has to be in format (i,j) as a tuple
@@ -103,13 +121,14 @@ def bfs_from_0(bfs_test, start): #start has to be in format (i,j) as a tuple
         node = queue.pop(0)
         x = node[0]
         y = node[1]
-        updateKB((x,y))
         if node not in explored:
+            updateKB((x,y))
             explored.add(node)
             if (isValid(x+1,y)):
                 if (matrix[x+1,y] == 0):
                     queue.append((x+1,y))
                 bfs_test[x+1,y] = matrix[x+1,y]
+
 
             if (isValid(x+1,y+1)):
                 if (matrix[x+1,y+1] == 0):
@@ -225,6 +244,8 @@ for o in range(0, dim):
         KBTemp= KB(0,0,0,0,0)
         playboard[o][p]= KBTemp
 setHidden(playboard)
+
+#graphics.display_graphics(playboard, dim)
 # #print (playboard)
 #
 #
@@ -354,8 +375,10 @@ while(matrix[v,w] != 0):
 # ans_board = bfs_from_0((v,w))
 
 bfsTest = bfs_from_0(bfsTest, (v,w))
+#graphics.display_graphics(playboard, dim)
 
 print(playboard)
+
 
 graphicsAk.display_graphics(bfsTest, dim)
 #graphics.display_graphics(testBFS, dim)
