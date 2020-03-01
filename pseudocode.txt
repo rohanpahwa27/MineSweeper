@@ -35,3 +35,12 @@ def solve_sweep:
             if same
                 ABORT MISSION ABORT!!! (return lol)
 
+
+
+
+
+AGENT 2.2!!!!!
+
+base cases:
+x-(any number of other variables)=1 --> x = 1, everything else = 0
+x = 1 --> x = 1!!
