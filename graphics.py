@@ -42,6 +42,9 @@ def display_graphics(matrix, dim):
                 if(matrix[j,i]).num == -1:
                     text = font.render("?", True, purple)
                     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
+                if(matrix[j,i]).mine == 3:
+                    text = font.render("%", True, blue)
+                    screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
                 if(matrix[j,i].num == 9):
                     si = 10+(i*width)
                     sj = 10+(j*width)
