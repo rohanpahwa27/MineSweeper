@@ -19,28 +19,28 @@ def populateEQMap(dim, playboard, explored):
             equation_map[rows,dim*dim] = playboard[x,y].num - playboard[x,y].numIdentMines
 
             #check all neighbors and if it is hidden, change its index in eq_map to 1=
-            if (isValid(x+1,y,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x+1,y) and playboard[x,y].mine ==0):
                 equation_map[rows,dim*(x+1)+y] = 1
                 print("hola muchacho",rows)
-            if (isValid(x+1,y+1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x+1,y+1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x+1)+(y+1)] = 1
-            if (isValid(x,y+1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x,y+1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x)+y+1] = 1
-            if (isValid(x-1,y+1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x-1,y+1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x-1)+y+1] = 1
-            if(isValid(x-1,y,dim) and playboard[x,y].mine ==0):
+            if(isValid(dim,x-1,y) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x-1)+y] = 1
-            if (isValid(x-1,y-1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x-1,y-1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x-1)+y-1] = 1
-            if (isValid(x,y-1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x,y-1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x)+y-1] = 1
-            if (isValid(x+1,y-1,dim) and playboard[x,y].mine ==0):
+            if (isValid(dim,x+1,y-1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x+1)+y-1] = 1
         rows+=1

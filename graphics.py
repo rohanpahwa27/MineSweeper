@@ -3,23 +3,23 @@ import pygame
 #DISPLAY GRAPHICS
 def display_graphics(matrix, dim):
     pygame.init()
-
+    
     #set up drawing window
     screen = pygame.display.set_mode([520,520])
-
+    
     pygame.display.set_caption("Game Board")
     running = True
-
+    
     font = pygame.font.SysFont("arial", 36)
-
+    
     #run the game
     while running:
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 running = False
-
+    
         screen.fill((255,255,255)) #fill background with white
-
+        
         #define variables
         width = int(500/dim)
         black = (0,0,0)
@@ -27,14 +27,14 @@ def display_graphics(matrix, dim):
         green = (0,100,0)
         blue = (0,0,128)
         purple = (128,0,128)
-
+        
         #draw grid
         pygame.draw.rect(screen, black, (10,10,500,500),2)
         for i in range(int(500/dim), 500, int(500/dim)):
             pygame.draw.line(screen, black,(i+10,10),(i+10,510))
             pygame.draw.line(screen, black,(10,i+10),(510,i+10))
 
-
+        
         #draw mines
         radius = int(width/3) #radius of mine
         for i in range(0, dim):
@@ -55,7 +55,7 @@ def display_graphics(matrix, dim):
                     pygame.draw.polygon(screen, orange, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
                     pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
                     pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
-
+                
                 if(matrix[j,i].num >= 0 and matrix[j,i].num <= 8):
                     color = green
                 if(matrix[j,i].num == 0):
@@ -71,4 +71,4 @@ def display_graphics(matrix, dim):
                     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
         pygame.display.flip()
 
-    pygame.quit()
+pygame.quit()
