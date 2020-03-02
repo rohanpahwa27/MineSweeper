@@ -26,6 +26,8 @@ def display_graphics(matrix, dim):
         orange = (255,69,0)
         green = (0,100,0)
         blue = (0,0,128)
+        mine_pic = pygame.image.load('mine.jpg')
+        mine_pic = pygame.transform.scale(mine_pic,(width,width))
 
         #draw grid
         pygame.draw.rect(screen, black, (10,10,500,500),2)
@@ -38,19 +40,20 @@ def display_graphics(matrix, dim):
         radius = int(width/3) #radius of mine
         for i in range(0, dim):
             for j in range(0, dim):
-                # if(matrix[j,i]).mine == 0:
-                #     text = font.render("?", True, black)
-                #     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
+                if(matrix[j,i]).mine == 0:
+                     text = font.render("?", True, black)
+                     screen.blit(text,(i*width+10+(width/3),j*width+10+(width/8)))
                 if(matrix[j,i] == 9):
                     si = 10+(i*width)
                     sj = 10+(j*width)
-                    pygame.draw.circle(screen, orange, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
-                    pygame.draw.polygon(screen, orange, ((si+width/2,sj+(width/10)),(si+(width/3),sj+(width/4)),(si+(2*width/3),sj+(width/4)))) #top triangle
-                    pygame.draw.polygon(screen, orange, ((si+width/2,sj+(9*width/10)),(si+(width/3),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom triangle
-                    pygame.draw.polygon(screen, orange, ((si+(2*width/3),sj+(width/4)),(si+(5*width/6),sj+(width/4)),(si+(3*width/4),sj+(width/2)))) #top right
-                    pygame.draw.polygon(screen, orange, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
-                    pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
-                    pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
+                    screen.blit(mine_pic,(i*width+10,j*width+10))
+#                    pygame.draw.circle(screen, orange, (int((10+(i*width)+(width/2))),int((10+(j*width)+(width/2)))),radius)
+#                    pygame.draw.polygon(screen, orange, ((si+width/2,sj+(width/10)),(si+(width/3),sj+(width/4)),(si+(2*width/3),sj+(width/4)))) #top triangle
+#                    pygame.draw.polygon(screen, orange, ((si+width/2,sj+(9*width/10)),(si+(width/3),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom triangle
+#                    pygame.draw.polygon(screen, orange, ((si+(2*width/3),sj+(width/4)),(si+(5*width/6),sj+(width/4)),(si+(3*width/4),sj+(width/2)))) #top right
+#                    pygame.draw.polygon(screen, orange, ((si+(3*width/4),sj+(width/2)),(si+(5*width/6),sj+(3*width/4)),(si+(2*width/3),sj+(3*width/4)))) #bottom right
+#                    pygame.draw.polygon(screen, orange, ((si+(width/3),sj+(width/4)),(si+(width/6),sj+(width/4)),(si+(width/4),sj+(width/2)))) #top left
+#                    pygame.draw.polygon(screen, orange, ((si+(width/4),sj+(width/2)),(si+(width/6),sj+(3*width/4)),(si+(width/3),sj+(3*width/4)))) #bottom left
 
                 if(matrix[j,i] >= 0 and matrix[j,i] <= 8):
                     color = green

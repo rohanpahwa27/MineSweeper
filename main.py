@@ -64,7 +64,8 @@ def updateKB(playboard, coord):
     x = coord[0]
     y = coord[1]
     if (matrix[x,y] == 9):
-        playboard[x,y].mine = 1
+        if (playboard[x,y].mine != 3):
+            playboard[x,y].mine = 1
         if (isValid(dim,x+1,y)):
             playboard[x+1,y].numIdentMines+=1
             playboard[x+1,y].numHidden-=1
@@ -259,11 +260,13 @@ def mark_as_flags(x,y):
         if (playboard[x,y].mine == 0):
             print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
+            
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))
             if (x,y) not in knowledge_expanded:
                 updateKB(playboard, (x,y))
                 knowledge_expanded.add((x,y))
+            print(playboard[x,y].mine)
 
 def set_hidden_to_safe(x,y):
     list = getValidNeighbors((x,y))
@@ -356,7 +359,7 @@ while(matrix[v,w] != 0):
         updateKB(playboard,(v,w))
         knowledge_expanded.add((v,w))
     print((v,w))
-
+print(agent2.populateEQMap(dim,playboard,set_of_coords))
 playboard = bfs_from_0(playboard,(v,w))
 for i in range(0,dim):
     for j in range(0,dim):
@@ -428,7 +431,7 @@ for i in range(0,dim):
             print((i,j), playboard[i,j])
 
 
-print(agent2.populateEQMap(dim,playboard,set_of_coords))
+#print(agent2.populateEQMap(dim,playboard,set_of_coords))
 
 graphics.display_graphics(playboard, dim)
 

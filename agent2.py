@@ -16,7 +16,12 @@ def populateEQMap(dim, playboard, explored):
             if rows != 0:
                 equation_map = equation_map.row_insert(rows, sp.zeros(1,dim*dim+1))
             print("(",x,",",y,")")
+            print(rows)
+            print(dim*dim)
+            print(equation_map.shape)
             equation_map[rows,dim*dim] = playboard[x,y].num - playboard[x,y].numIdentMines
+            print(playboard[x,y].num)
+            print(playboard[x,y].numIdentMines)
 
             #check all neighbors and if it is hidden, change its index in eq_map to 1=
             if (isValid(dim,x+1,y) and playboard[x,y].mine ==0):
@@ -43,7 +48,9 @@ def populateEQMap(dim, playboard, explored):
             if (isValid(dim,x+1,y-1) and playboard[x,y].mine ==0):
                 print("hola muchacho",rows)
                 equation_map[rows,dim*(x+1)+y-1] = 1
-        rows+=1
+            rows+=1
+    print("---------------------------------------------")
+
     return equation_map
 
 #def solveEqs(equation_map):
