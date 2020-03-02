@@ -18,10 +18,11 @@ class KB():
     numIdentMines: int #num of identified mines (should be <= num)
     numHidden: int #num of hidden squares
 
+#fills a matrix of size dim*dim with num_mines many mines
 dim = 10
 num_mines = 20
-#fills a matrix of size dim*dim with num_mines many mines
 
+#returns a list of all valid neighbors around a specific coordinate
 def getValidNeighbors(coord):
     x = coord[0]
     y = coord[1]
@@ -44,109 +45,60 @@ def getValidNeighbors(coord):
         list.append((x+1,y-1))
     return list
 
+#initialize knowledge base with number of hidden squares in each coordinate of board
 def setHidden(playboard):
+    #coordinates that are not corner and edge have 8 hidden spots around them
     for i in range(1,dim-1):
         for j in range(1,dim-1):
             playboard[i,j].numHidden = 8
 
+    #corner coordinates have 3 hidden spots around them
     playboard[0,0].numHidden = 3
     playboard[0,dim-1].numHidden = 3
     playboard[dim-1,0].numHidden = 3
     playboard[dim-1,dim-1].numHidden = 3
 
+    #edge coordinates have 5 hidden spots around them
     for i in range(1,dim-1):
         playboard[0,i].numHidden = 5
         playboard[i,0].numHidden = 5
         playboard[dim-1,i].numHidden = 5
         playboard[i,dim-1].numHidden = 5
 
+#updates knowledge base
 def updateKB(playboard, coord):
     x = coord[0]
     y = coord[1]
+    #if coordinate is a 9 means a mine, so increase all identified mines by 1, and decrease hidden by 1 of neighbors
     if (matrix[x,y] == 9):
         if (playboard[x,y].mine != 3):
             playboard[x,y].mine = 1
-        if (isValid(dim,x+1,y)):
-            playboard[x+1,y].numIdentMines+=1
-            playboard[x+1,y].numHidden-=1
-        if (isValid(dim,x+1,y+1)):
-            playboard[x+1,y+1].numIdentMines+=1
-            playboard[x+1,y+1].numHidden-=1
-        if (isValid(dim,x,y+1)):
-            playboard[x,y+1].numIdentMines+=1
-            playboard[x,y+1].numHidden-=1
-        if (isValid(dim,x-1,y+1)):
-            playboard[x-1,y+1].numIdentMines+=1
-            playboard[x-1,y+1].numHidden-=1
-        if(isValid(dim,x-1,y)):
-            playboard[x-1,y].numIdentMines+=1
-            playboard[x-1,y].numHidden-=1
-        if (isValid(dim,x-1,y-1)):
-            playboard[x-1,y-1].numIdentMines+=1
-            playboard[x-1,y-1].numHidden-=1
-        if (isValid(dim,x,y-1)):
-            playboard[x,y-1].numIdentMines+=1
-            playboard[x,y-1].numHidden-=1
-        if (isValid(dim,x+1,y-1)):
-            playboard[x+1,y-1].numIdentMines+=1
-            playboard[x+1,y-1].numHidden-=1
+        list = getValidNeighbors((x,y))
+        for coords in list:
+            x = coords[0]
+            y = coords[1]
+            playboard[x,y].numIdentMines+=1
+            playboard[x,y].numHidden-=1
+
     else:
+    #if coordinate is not a mine increase neighbors safe and decrease neighbors hidden
         playboard[x,y].mine = 2
         playboard[x,y].num = matrix[x,y]
-        if (isValid(dim,x+1,y)):
-            playboard[x+1,y].numSafe+=1
-            playboard[x+1,y].numHidden-=1
+        list = getValidNeighbors((x,y))
+        for coords in list:
+            x = coords[0]
+            y = coords[1]
+            playboard[x,y].numSafe+=1
+            playboard[x,y].numHidden-=1
             if(playboard[x,y].num == 0):
-                playboard[x+1,y].mine = 2
-                playboard[x+1,y].num = matrix[x+1,y]
-        if (isValid(dim,x+1,y+1)):
-            playboard[x+1,y+1].numSafe+=1
-            playboard[x+1,y+1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x+1,y+1].mine = 2
-                playboard[x+1,y+1].num = matrix[x+1,y+1]
-        if (isValid(dim,x,y+1)):
-            playboard[x,y+1].numSafe+=1
-            playboard[x,y+1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x,y+1].mine = 2
-                playboard[x,y+1].num = matrix[x,y+1]
-        if (isValid(dim,x-1,y+1)):
-            playboard[x-1,y+1].numSafe+=1
-            playboard[x-1,y+1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x-1,y+1].mine = 2
-                playboard[x-1,y+1].num = matrix[x-1,y+1]
-        if(isValid(dim,x-1,y)):
-            playboard[x-1,y].numSafe+=1
-            playboard[x-1,y].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x-1,y].mine = 2
-                playboard[x-1,y].num = matrix[x-1,y]
-        if (isValid(dim,x-1,y-1)):
-            playboard[x-1,y-1].numSafe+=1
-            playboard[x-1,y-1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x-1,y-1].mine = 2
-                playboard[x-1,y-1].num = matrix[x-1,y-1]
-        if (isValid(dim,x,y-1)):
-            playboard[x,y-1].numSafe+=1
-            playboard[x,y-1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x,y-1].mine = 2
-                playboard[x,y-1].num = matrix[x,y-1]
-        if (isValid(dim,x+1,y-1)):
-            playboard[x+1,y-1].numSafe+=1
-            playboard[x+1,y-1].numHidden-=1
-            if(playboard[x,y].num == 0):
-                playboard[x+1,y-1].mine = 2
-                playboard[x+1,y-1].num = matrix[x+1,y-1]
-# print((x,y),playboard[x,y])
+                playboard[x,y].mine = 2
+                playboard[x,y].num = matrix[x,y]
 
+#method that looks at a 0 coordinate and expands outwards until it hits a number in all directions
 def bfs_from_0(playboard, start): #start has to be in format (i,j) as a tuple
     explored = set()
     queue = [start]
-    
+
     while queue:
         node = queue.pop(0)
         x = node[0]
@@ -156,91 +108,29 @@ def bfs_from_0(playboard, start): #start has to be in format (i,j) as a tuple
             if (x,y) not in knowledge_expanded:
                 updateKB(playboard,(x,y))
                 knowledge_expanded.add((x,y))
-            # print((x,y),playboard[x,y])
-            # graphics.display_graphics(playboard, dim)
+
             explored.add(node)
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))
-            if (isValid(dim,x+1,y)):
-                if (matrix[x+1,y] == 0):
-                    queue.append((x+1,y))
-                else:
-                    if (x+1,y) not in knowledge_expanded:
-                        updateKB(playboard,(x+1,y))
-                        knowledge_expanded.add((x+1,y))
-                playboard[x+1,y].num = matrix[x+1,y]
-            
-            if (isValid(dim,x+1,y+1)):
-                if (matrix[x+1,y+1] == 0):
-                    queue.append((x+1,y+1))
-                else:
-                    if (x+1,y+1) not in knowledge_expanded:
-                        updateKB(playboard,(x+1,y+1))
-                        knowledge_expanded.add((x+1,y+1))
-                playboard[x+1,y+1].num = matrix[x+1,y+1]
-        
-            if (isValid(dim,x,y+1)):
-                if (matrix[x,y+1] == 0):
-                    queue.append((x,y+1))
-                else:
-                    if (x,y+1) not in knowledge_expanded:
-                        updateKB(playboard,(x,y+1))
-                        knowledge_expanded.add((x,y+1))
-                playboard[x,y+1].num = matrix[x,y+1]
-    
-            if (isValid(dim,x-1,y+1)):
-                if (matrix[x-1,y+1] == 0):
-                    queue.append((x-1,y+1))
-                else:
-                    if (x-1,y+1) not in knowledge_expanded:
-                        updateKB(playboard,(x-1,y+1))
-                        knowledge_expanded.add((x-1,y+1))
-                playboard[x-1,y+1].num = matrix[x-1,y+1]
-            
-            if(isValid(dim,x-1,y)):
-                if (matrix[x-1,y] == 0):
-                    queue.append((x-1,y))
-                else:
-                    if (x-1,y) not in knowledge_expanded:
-                        updateKB(playboard,(x-1,y))
-                        knowledge_expanded.add((x-1,y))
-                playboard[x-1,y].num = matrix[x-1,y]
 
-            if (isValid(dim,x-1,y-1)):
-                if (matrix[x-1,y-1] == 0):
-                    queue.append((x-1,y-1))
+            list = getValidNeighbors((x,y))
+            for coords in list:
+                x = coords[0]
+                y = coords[1]
+                if (matrix[x,y] == 0):
+                    queue.append((x,y))
                 else:
-                    if (x-1,y-1) not in knowledge_expanded:
-                        updateKB(playboard,(x-1,y-1))
-                        knowledge_expanded.add((x-1,y-1))
-                playboard[x-1,y-1].num = matrix[x-1,y-1]
-            
-            if (isValid(dim,x,y-1)):
-                if (matrix[x,y-1] == 0):
-                    queue.append((x,y-1))
-                else:
-                    if (x,y-1) not in knowledge_expanded:
-                        updateKB(playboard,(x,y-1))
-                        knowledge_expanded.add((x,y-1))
-                playboard[x,y-1].num = matrix[x,y-1]
-
-            if (isValid(dim,x+1,y-1)):
-                if (matrix[x+1,y-1] == 0):
-                    queue.append((x+1,y-1))
-                else:
-                    if (x+1,y-1) not in knowledge_expanded:
-                        updateKB(playboard,(x+1,y-1))
-                        knowledge_expanded.add((x+1,y-1))
-                playboard[x+1,y-1].num = matrix[x+1,y-1]
+                    if (x,y) not in knowledge_expanded:
+                        updateKB(playboard,(x,y))
+                        knowledge_expanded.add((x,y))
+                playboard[x,y].num = matrix[x,y]
 
     return playboard
 
+#method to randomly initialize board with num_mines many mines
 def createMine():
-    
-    #random_matrix = np.random.randint(1,size=(dim,dim))
     random_matrix = np.zeros((dim, dim), dtype=np.int)
     mine_location = set()
-    #for i in range(0, num_mines):
     while len(mine_location)!= num_mines:
         value = np.random.randint(dim*dim)
         if(value not in mine_location):
@@ -251,6 +141,7 @@ def createMine():
 
     return random_matrix
 
+#method to mark coordinates that satisfy condition numMines - numIdentMines = numHidden as flags
 def mark_as_flags(x,y):
     list = getValidNeighbors((x,y))
     print("list",(x,y),list)
@@ -260,7 +151,7 @@ def mark_as_flags(x,y):
         if (playboard[x,y].mine == 0):
             print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
-            
+
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))
             if (x,y) not in knowledge_expanded:
@@ -268,6 +159,7 @@ def mark_as_flags(x,y):
                 knowledge_expanded.add((x,y))
             print(playboard[x,y].mine)
 
+#marking all neighbors that are safe as safe
 def set_hidden_to_safe(x,y):
     list = getValidNeighbors((x,y))
     for coords in list:
@@ -282,6 +174,7 @@ def set_hidden_to_safe(x,y):
 matrix = createMine()
 print(matrix)
 
+#check if coordinate is valid within the board
 def isValid(dim,i, j):
     if(i>=0 and i<dim and j>=0 and j<dim):
         return True
@@ -291,30 +184,13 @@ def isValid(dim,i, j):
 def countMines(x, y, matrix):
     #get all 8 coordinates around a specific x,y coordinate and increment if it is a mine
     num_mines_around=0
-    if(isValid(dim,x+1, y)):
-        if(matrix[x+1][y]==9):
+    list = getValidNeighbors((x,y))
+    for coords in list:
+        x = coords[0]
+        y = coords[1]
+        if(matrix[x][y]==9):
             num_mines_around+=1
-    if(isValid(dim,x+1, y+1)):
-        if(matrix[x+1][y+1]==9):
-            num_mines_around+=1
-    if(isValid(dim,x, y+1)):
-        if(matrix[x][y+1]==9):
-            num_mines_around+=1
-    if(isValid(dim,x-1, y+1)):
-        if(matrix[x-1][y+1]==9):
-            num_mines_around+=1
-    if(isValid(dim,x-1, y)):
-        if(matrix[x-1][y]==9):
-            num_mines_around+=1
-    if(isValid(dim,x-1, y-1)):
-        if(matrix[x-1][y-1]==9):
-            num_mines_around+=1
-    if(isValid(dim,x, y-1)):
-        if(matrix[x][y-1]==9):
-            num_mines_around+=1
-    if(isValid(dim,x+1, y-1)):
-        if(matrix[x+1][y-1]==9):
-            num_mines_around+=1
+
     return num_mines_around
 
 for i in range(0, dim):
@@ -370,14 +246,9 @@ deep_copy = set()
 for coords in set_of_coords:
     deep_copy.add(coords)
 while(len(set_of_coords)>0):
-    # for i in range(0,dim):
-    #     for j in range(0,dim):
-    #         if (i,j) in set_of_coords:
-    #             print((i,j), playboard[i,j])
+    graphics.display_graphics(playboard, dim)
+
     prev_len = len(set_of_coords)
-    # print("------------------------------------")
-    print(len(deep_copy))
-    # print("------------------------------------")
     for coords in deep_copy:
         x = coords[0]
         y = coords[1]
@@ -395,8 +266,7 @@ while(len(set_of_coords)>0):
                 set_hidden_to_safe(x,y)
                 if (x,y) in set_of_coords:
                     set_of_coords.remove((x,y))
-                
-                
+
                 #check if any of the neighbors are 0
                 list = getValidNeighbors((x,y))
                 for coords in list:
@@ -432,7 +302,6 @@ for i in range(0,dim):
 
 
 #print(agent2.populateEQMap(dim,playboard,set_of_coords))
-
-graphics.display_graphics(playboard, dim)
+#graphics.display_graphics(playboard, dim)
 
 print(playboard)
