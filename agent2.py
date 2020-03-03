@@ -1,6 +1,6 @@
 import numpy as np
 import sympy as sp
-from func import isValid
+from func import *
 
 
 def populateEQMap(dim, playboard, explored):
@@ -24,30 +24,12 @@ def populateEQMap(dim, playboard, explored):
             print(playboard[x,y].numIdentMines)
 
             #check all neighbors and if it is hidden, change its index in eq_map to 1=
-            if (isValid(dim,x+1,y) and playboard[x,y].mine ==0):
-                equation_map[rows,dim*(x+1)+y] = 1
-                print("hola muchacho",rows)
-            if (isValid(dim,x+1,y+1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x+1)+(y+1)] = 1
-            if (isValid(dim,x,y+1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x)+y+1] = 1
-            if (isValid(dim,x-1,y+1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x-1)+y+1] = 1
-            if(isValid(dim,x-1,y) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x-1)+y] = 1
-            if (isValid(dim,x-1,y-1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x-1)+y-1] = 1
-            if (isValid(dim,x,y-1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x)+y-1] = 1
-            if (isValid(dim,x+1,y-1) and playboard[x,y].mine ==0):
-                print("hola muchacho",rows)
-                equation_map[rows,dim*(x+1)+y-1] = 1
+            list = getValidNeighbors((x,y), dim)
+            for coords in list:
+                x = coords[0]
+                y = coords[1]
+                if(playboard[x,y].mine == 0):
+                    equation_map[rows,dim*x+y] = 1
             rows+=1
     print("---------------------------------------------")
 
@@ -62,4 +44,3 @@ def populateEQMap(dim, playboard, explored):
 
 #need to call populateEQMap in main after strategy 2.1
 #then need to solve equation_map and update kb for variables found
-
