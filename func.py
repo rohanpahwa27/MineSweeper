@@ -49,7 +49,7 @@ def setHidden(playboard, dim):
         playboard[i,dim-1].numHidden = 5
 
 #updates knowledge base
-def updateKB(playboard, coord, dim, matrix):
+def updateKB(playboard, coord, dim, matrix, clicked):
     x = coord[0]
     y = coord[1]
     #if coordinate is a 9 means a mine, so increase all identified mines by 1, and decrease hidden by 1 of neighbors
@@ -67,6 +67,8 @@ def updateKB(playboard, coord, dim, matrix):
     #if coordinate is not a mine increase neighbors safe and decrease neighbors hidden
         playboard[x,y].mine = 2
         playboard[x,y].num = matrix[x,y]
+        if (x,y) not in clicked:
+            clicked.append((x,y))
         list = getValidNeighbors((x,y), dim)
         for coords in list:
             x = coords[0]
@@ -76,9 +78,11 @@ def updateKB(playboard, coord, dim, matrix):
             if(playboard[x,y].num == 0):
                 playboard[x,y].mine = 2
                 playboard[x,y].num = matrix[x,y]
+                if (x,y) not in clicked:
+                    clicked.append((x,y))
 
 #method that looks at a 0 coordinate and expands outwards until it hits a number in all directions
-def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords): #start has to be in format (i,j) as a tuple
+def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords, clicked): #start has to be in format (i,j) as a tuple
     explored = set()
     queue = [start]
 
@@ -89,7 +93,7 @@ def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords)
         if node not in explored:
             # print((x,y),playboard[x,y])
             if (x,y) not in knowledge_expanded:
-                updateKB(playboard,(x,y), dim, matrix)
+                updateKB(playboard,(x,y), dim, matrix, clicked)
                 knowledge_expanded.add((x,y))
 
             explored.add(node)
@@ -104,9 +108,11 @@ def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords)
                     queue.append((x,y))
                 else:
                     if (x,y) not in knowledge_expanded:
-                        updateKB(playboard,(x,y), dim, matrix)
+                        updateKB(playboard,(x,y), dim, matrix, clicked)
                         knowledge_expanded.add((x,y))
                 playboard[x,y].num = matrix[x,y]
+                if(x,y) not in clicked:
+                    clicked.append((x,y))
 
     return playboard
 
@@ -125,7 +131,7 @@ def createMine(dim, num_mines):
     return random_matrix
 
 #method to mark coordinates that satisfy condition numMines - numIdentMines = numHidden as flags
-def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix):
+def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked):
     list = getValidNeighbors((x,y), dim)
     print("list",(x,y),list)
     for coords in list:
@@ -134,16 +140,18 @@ def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix
         if (playboard[x,y].mine == 0):
             print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
+            if (x,y) not in clicked:
+                clicked.append((x,y))
 
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))
             if (x,y) not in knowledge_expanded:
-                updateKB(playboard, (x,y), dim, matrix)
+                updateKB(playboard, (x,y), dim, matrix, clicked)
                 knowledge_expanded.add((x,y))
             print(playboard[x,y].mine)
 
 #marking all neighbors that are safe as safe
-def set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix):
+def set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix, clicked):
     list = getValidNeighbors((x,y), dim)
     for coords in list:
         x = coords[0]
@@ -151,7 +159,7 @@ def set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix):
         if (playboard[x,y].mine == 0):
             playboard[x,y].mine = 2
             if (x,y) not in knowledge_expanded:
-                updateKB(playboard, (x,y), dim, matrix)
+                updateKB(playboard, (x,y), dim, matrix, clicked)
                 knowledge_expanded.add((x,y))
 
 #check if coordinate is valid within the board

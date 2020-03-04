@@ -22,6 +22,7 @@ class KB():
 dim = 10
 num_mines = 20
 matrix = createMine(dim, num_mines)
+clicked = []
 
 #get the answer key board
 for i in range(0, dim):
@@ -56,6 +57,8 @@ w = random.randint(0,dim-1)
 
 #expose this number
 playboard[v,w].num = matrix[v,w]
+if (v,w) not in clicked:
+    clicked.append((v,w))
 
 #update the knowledge base (playboard) based on if it is a 9(mine) or not
 if (matrix[v,w] != 0):
@@ -64,7 +67,7 @@ if (matrix[v,w] != 0):
     else:
         playboard[v,w].mine = 2
     if (v,w) not in knowledge_expanded:
-        updateKB(playboard,(v,w), dim, matrix)
+        updateKB(playboard,(v,w), dim, matrix, clicked)
         knowledge_expanded.add((v,w))
 print("random",(v,w))
 
@@ -73,15 +76,17 @@ while(matrix[v,w] != 0):
     v = random.randint(0,dim-1)
     w = random.randint(0,dim-1)
     playboard[v,w].num = matrix[v,w]
+    if (v,w) not in clicked:
+        clicked.append((v,w))
     if (v,w) not in knowledge_expanded:
-        updateKB(playboard,(v,w), dim, matrix)
+        updateKB(playboard,(v,w), dim, matrix, clicked)
         knowledge_expanded.add((v,w))
     print((v,w))
 print(agent2.populateEQMap(dim,playboard,set_of_coords))
 
 #use this method to expand all the safe neighbors from the coordinate that has a 0 value
 #all values around a 0 are safe
-playboard = bfs_from_0(playboard,(v,w), dim, matrix, knowledge_expanded, set_of_coords)
+playboard = bfs_from_0(playboard,(v,w), dim, matrix, knowledge_expanded, set_of_coords, clicked)
 for i in range(0,dim):
     for j in range(0,dim):
         print((i,j), playboard[i,j])
@@ -92,6 +97,8 @@ for coords in set_of_coords:
 counter = 0
 
 #after some random clicks and one expansion from 0 start the game
+
+
 while(len(set_of_coords)>0):
     #graphics.display_graphics(playboard, dim)
 
@@ -107,14 +114,14 @@ while(len(set_of_coords)>0):
             #this means the only spots that are left are mines
             if (playboard[x,y].num - playboard[x,y].numIdentMines == playboard[x,y].numHidden):
                 #make all numHidden as flag and remove flags from set_coords
-                mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix)
+                mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked)
                 if (x,y) in set_of_coords:
                     set_of_coords.remove((x,y))
 
             #this means that all the mines around this location are either flagged or been clicked on, so you can mark as safe
             if(playboard[x,y].num == playboard[x,y].numIdentMines):
                 #mark hidden neighbors as safe
-                set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix)
+                set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix, clicked)
                 if (x,y) in set_of_coords:
                     set_of_coords.remove((x,y))
 
@@ -124,7 +131,7 @@ while(len(set_of_coords)>0):
                     x = coords[0]
                     y = coords[1]
                     if(playboard[x,y].num == 0):
-                        bfs_from_0(playboard, (x,y), dim, matrix, knowledge_expanded, set_of_coords)
+                        bfs_from_0(playboard, (x,y), dim, matrix, knowledge_expanded, set_of_coords, clicked)
 
 
     deep_copy = set()
@@ -140,8 +147,10 @@ while(len(set_of_coords)>0):
         v = randCoord[0]
         w = randCoord[1]
         playboard[v,w].num = matrix[v,w]
+        if (v,w) not in clicked:
+            clicked.append((v,w))
         if (v,w) not in knowledge_expanded:
-            updateKB(playboard,(v,w), dim, matrix)
+            updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
         if (v,w) in set_of_coords:
             set_of_coords.remove((v,w))
@@ -153,5 +162,8 @@ for i in range(0,dim):
 
 
 #print(agent2.populateEQMap(dim,playboard,set_of_coords))
+print("this is the FINAL LENGTH", len(clicked))
+for obj in clicked:
+    print(obj)
 graphics.display_graphics(playboard, dim)
 print(playboard)
