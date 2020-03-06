@@ -4,7 +4,8 @@ from func import *
 
 
 def populateEQMap(dim, playboard, explored):
-    equation_map = sp.zeros(1,dim*dim+1) #zeros in format of (# rows, # columns)
+    #equation_map = sp.zeros(1,dim*dim+1) #zeros in format of (# rows, # columns)
+    equation_map = np.zeros((1,dim*dim+1)) #zeros in format of (# rows, # columns)
     rows = 0
     print("---------------------------------------------")
 
@@ -14,14 +15,15 @@ def populateEQMap(dim, playboard, explored):
         #if item in explored set is safe, add its numMines to end of row in eq_map, then examine its neighbors
         if playboard[x,y].mine==2:
             if rows != 0:
-                equation_map = equation_map.row_insert(rows, sp.zeros(1,dim*dim+1))
-            print("(",x,",",y,")")
-            print(rows)
-            print(dim*dim)
-            print(equation_map.shape)
+                #equation_map = equation_map.row_insert(rows, np.zeros((1,dim*dim+1)))
+                equation_map = np.append(equation_map, np.zeros((1,dim*dim+1)),axis = 0)
+#            print("(",x,",",y,")")
+#            print(rows)
+#            print(dim*dim)
+#            print(equation_map.shape)
             equation_map[rows,dim*dim] = playboard[x,y].num - playboard[x,y].numIdentMines
-            print(playboard[x,y].num)
-            print(playboard[x,y].numIdentMines)
+#            print(playboard[x,y].num)
+#            print(playboard[x,y].numIdentMines)
 
             #check all neighbors and if it is hidden, change its index in eq_map to 1=
             list = getValidNeighbors((x,y), dim)
