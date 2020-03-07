@@ -67,8 +67,9 @@ def updateKB(playboard, coord, dim, matrix, clicked):
     #if coordinate is not a mine increase neighbors safe and decrease neighbors hidden
         playboard[x,y].mine = 2
         playboard[x,y].num = matrix[x,y]
-        if (x,y) not in clicked:
-            clicked.append((x,y))
+        if (y,x) not in clicked:
+            clicked.append((y,x))
+            print("updateKB appended", (x,y))
         list = getValidNeighbors((x,y), dim)
         for coords in list:
             x = coords[0]
@@ -78,8 +79,9 @@ def updateKB(playboard, coord, dim, matrix, clicked):
             if(playboard[x,y].num == 0):
                 playboard[x,y].mine = 2
                 playboard[x,y].num = matrix[x,y]
-                if (x,y) not in clicked:
-                    clicked.append((x,y))
+                if (y,x) not in clicked:
+                    clicked.append((y,x))
+                    print("appended", (x,y))
 
 #method that looks at a 0 coordinate and expands outwards until it hits a number in all directions
 def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords, clicked): #start has to be in format (i,j) as a tuple
@@ -111,8 +113,9 @@ def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords,
                         updateKB(playboard,(x,y), dim, matrix, clicked)
                         knowledge_expanded.add((x,y))
                 playboard[x,y].num = matrix[x,y]
-                if(x,y) not in clicked:
-                    clicked.append((x,y))
+                if(y,x) not in clicked:
+                    clicked.append((y,x))
+                    print("bfs appended", (x,y))
 
     return playboard
 
@@ -140,8 +143,9 @@ def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix
         if (playboard[x,y].mine == 0):
             print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
-            if (x,y) not in clicked:
-                clicked.append((x,y))
+            if (y,x) not in clicked:
+                clicked.append((y,x))
+                print("marked as appended", (x,y))
 
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))

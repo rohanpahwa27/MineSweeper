@@ -1,24 +1,24 @@
 from pprint import pprint
 from test import *
 
-#mat = np.array([[1,2,0,1,0,0], [0,0,0,3,0,0],[0,0,1,3,1,0],[0,0,0,0,0,1]], dtype = float)
-# mat = np.array([[0,1,2], [1,2,1],[2,7,8]], dtype = float)
-mat = np.array([[0,1], [1,2],[0,5]], dtype = float)
+#matrix = np.array([[1,2,0,1,0,0], [0,0,0,3,0,0],[0,0,1,3,1,0],[0,0,0,0,0,1]], dtype = float)
+# matrix = np.array([[0,1,2], [1,2,1],[2,7,8]], dtype = float)
+#matrix = np.array([[0,1], [1,2],[0,5]], dtype = float)
 
-def rref(mat):
-	print("-------------------ORIGINAL MATRIX-------------------")
-	pprint(mat)
+def rref(matrix):
+	# print("-------------------ORIGINAL MATRIX-------------------")
+	# pprint(matrix)
 
-	rows = mat.shape[0]
-	cols = mat.shape[1]
+	rows = matrix.shape[0]
+	cols = matrix.shape[1]
 
 
 	#organize rows in order of # of starting zeros (least to greatest)
 	r = 0
 	for a in range(0, cols):
 		for b in range(r,rows):
-			if mat[b][a] != 0:
-				interchange(cols,mat,b,r)
+			if matrix[b][a] != 0:
+				interchange(cols,matrix,b,r)
 				r+=1
 			if r == rows:
 				break
@@ -27,7 +27,7 @@ def rref(mat):
 	#reduce the rows
 	for i in range(0,rows):
 		f=0
-		while (f<cols and mat[i][f] == 0):
+		while (f<cols and matrix[i][f] == 0):
 			f+=1
 
 		#if it is a row of zeros, move to the next line
@@ -35,31 +35,32 @@ def rref(mat):
 			continue
 
 		#make all the other numbers in the col = 0
-		if mat[i][f] == 1: #if pivot is already a 1, just change everything else in its column
+		if matrix[i][f] == 1: #if pivot is already a 1, just change everything else in its column
 			for j in range(0,rows):
 				if j==i:
 					continue
-				add_mult(cols,mat,-mat[j][f],i,j)
+				add_mult(cols,matrix,-matrix[j][f],i,j)
 			continue
-		if mat[i][f] != 1: #make pivot 1 before changing everything else in the column
-			multiply_const(cols,mat,1/mat[i][f],i)
+		if matrix[i][f] != 1: #make pivot 1 before changing everything else in the column
+			multiply_const(cols,matrix,1/matrix[i][f],i)
 			for j in range(0,rows):
 				if j==i:
 					continue
-				add_mult(cols,mat,-mat[j][f],i,j)
+				add_mult(cols,matrix,-matrix[j][f],i,j)
 
 
 	#organize rows in order of # of starting zeros (least to greatest) - aka put rows of zeros at end
 	r = 0
 	for a in range(0, cols):
 		for b in range(r,rows):
-			if mat[b][a] != 0:
-				interchange(cols,mat,b,r)
+			if matrix[b][a] != 0:
+				interchange(cols,matrix,b,r)
 				r+=1
 			if r == rows:
 				break
-	print("-------------------FINAL RREF-------------------")
-	pprint(mat)
+	#print("-------------------FINAL RREF-------------------")
+	#pprint(matrix)
+#return matrix
 
 #run rref
-rref(mat)
+#rref(matrix)

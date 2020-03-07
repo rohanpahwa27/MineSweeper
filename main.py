@@ -19,8 +19,8 @@ class KB():
     numHidden: int #num of hidden squares
 
 #fills a matrix of size dim*dim with num_mines many mines
-dim = 10
-num_mines = 20
+dim = 15
+num_mines = 45
 matrix = createMine(dim, num_mines)
 clicked = []
 
@@ -57,39 +57,44 @@ w = random.randint(0,dim-1)
 
 #expose this number
 playboard[v,w].num = matrix[v,w]
-if (v,w) not in clicked:
-    clicked.append((v,w))
-
+if (w,v) not in clicked:
+    clicked.append((w,v))
+    print("appended", (v,w))
 #update the knowledge base (playboard) based on if it is a 9(mine) or not
-if (matrix[v,w] != 0):
-    if (matrix[v,w] == 9):
-        playboard[v,w].mine = 1
-    else:
-        playboard[v,w].mine = 2
-    if (v,w) not in knowledge_expanded:
-        updateKB(playboard,(v,w), dim, matrix, clicked)
-        knowledge_expanded.add((v,w))
-print("random",(v,w))
+# if (matrix[v,w] != 0):
+#     if (matrix[v,w] == 9):
+#         playboard[v,w].mine = 1
+#     else:
+#         playboard[v,w].mine = 2
+#     if (v,w) not in knowledge_expanded:
+#         updateKB(playboard,(v,w), dim, matrix, clicked)
+#         knowledge_expanded.add((v,w))
+# print("random",(v,w))
 
 #keep clicking spots in the initial part of the game until you get a 0 so that you can expand safely from there
 while(matrix[v,w] != 0):
     v = random.randint(0,dim-1)
     w = random.randint(0,dim-1)
     playboard[v,w].num = matrix[v,w]
-    if (v,w) not in clicked:
-        clicked.append((v,w))
+    if (w,v) not in clicked:
+        clicked.append((w,v))
+        print("appended", (v,w))
     if (v,w) not in knowledge_expanded:
         updateKB(playboard,(v,w), dim, matrix, clicked)
         knowledge_expanded.add((v,w))
+    if len(clicked)>dim/2:
+        break;
     print((v,w))
-print(agent2.populateEQMap(dim,playboard,set_of_coords))
+#pprint(agent2.populateEQMap(dim,playboard,set_of_coords))
 
 #use this method to expand all the safe neighbors from the coordinate that has a 0 value
 #all values around a 0 are safe
-playboard = bfs_from_0(playboard,(v,w), dim, matrix, knowledge_expanded, set_of_coords, clicked)
-for i in range(0,dim):
-    for j in range(0,dim):
-        print((i,j), playboard[i,j])
+if playboard[v,w].num == 0:
+    playboard = bfs_from_0(playboard,(v,w), dim, matrix, knowledge_expanded, set_of_coords, clicked)
+
+# for i in range(0,dim):
+#     for j in range(0,dim):
+#         print((i,j), playboard[i,j])
 
 deep_copy = set()
 for coords in set_of_coords:
@@ -98,11 +103,18 @@ counter = 0
 
 #after some random clicks and one expansion from 0 start the game
 
+size = len(set_of_coords)
+
+
+#while size>0:
 
 while(len(set_of_coords)>0):
     #graphics.display_graphics(playboard, dim)
 
     prev_len = len(set_of_coords)
+    # prev_len = size
+    # print("SIZE", size)
+    # print("prev", prev_len)
 
     #deep_copy is same as set_of_coords
     for coords in deep_copy:
@@ -131,7 +143,8 @@ while(len(set_of_coords)>0):
                     x = coords[0]
                     y = coords[1]
                     if(playboard[x,y].num == 0):
-                        bfs_from_0(playboard, (x,y), dim, matrix, knowledge_expanded, set_of_coords, clicked)
+                        if (x,y) in set_of_coords:
+                            bfs_from_0(playboard, (x,y), dim, matrix, knowledge_expanded, set_of_coords, clicked)
 
 
     deep_copy = set()
@@ -139,31 +152,34 @@ while(len(set_of_coords)>0):
         deep_copy.add(coords)
         #check for size of set if same
     if(prev_len == len(set_of_coords)):
+    #if prev_len == size:
+        print("here")
         counter+=1
         #generate a new random number
+        #if size > 0:
         if (len(set_of_coords) > 0):
             randCoord = set_of_coords.pop()
             set_of_coords.add(randCoord)
         v = randCoord[0]
         w = randCoord[1]
         playboard[v,w].num = matrix[v,w]
-        if (v,w) not in clicked:
-            clicked.append((v,w))
+        if (w,v) not in clicked:
+            clicked.append((w,v))
+            print("appended", (v,w))
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
         if (v,w) in set_of_coords:
             set_of_coords.remove((v,w))
 
-for i in range(0,dim):
-    for j in range(0,dim):
-        if (i,j) in set_of_coords:
-            print((i,j), playboard[i,j])
+# for i in range(0,dim):
+#     for j in range(0,dim):
+#         if (i,j) in set_of_coords:
+#             print((i,j), playboard[i,j])
 
 
 #print(agent2.populateEQMap(dim,playboard,set_of_coords))
 print("this is the FINAL LENGTH", len(clicked))
-for obj in clicked:
-    print(obj)
-graphics.display_graphics(playboard, dim)
-print(playboard)
+# for obj in clicked:
+#     print(obj)
+graphics.display_graphics(playboard, dim, clicked)

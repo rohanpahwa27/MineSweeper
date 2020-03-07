@@ -1,13 +1,16 @@
 import numpy as np
-import sympy as sp
+#import sympy as sp
 from func import *
+from mat import rref
+from pprint import pprint
+from matrix import *
 
 
-def populateEQMap(dim, playboard, explored):
+def populateEQMap(dim, playboard, explored, matrix, clicked):
     #equation_map = sp.zeros(1,dim*dim+1) #zeros in format of (# rows, # columns)
     equation_map = np.zeros((1,dim*dim+1)) #zeros in format of (# rows, # columns)
     rows = 0
-    print("---------------------------------------------")
+    #print("---------------------------------------------")
 
     for val in explored:
         x = val[0]
@@ -33,15 +36,34 @@ def populateEQMap(dim, playboard, explored):
                 if(playboard[x,y].mine == 0):
                     equation_map[rows,dim*x+y] = 1
             rows+=1
-    print("---------------------------------------------")
+    # pprint(equation_map)
 
-    return equation_map
+    #reduce row echelon equation_map, and then solve for values of variables (can only be 0 or 1)
+    rref_equation_map = rref(equation_map)
+    #feed rref_equation_map into matrix.py --> return list of solutions
+    sols = []
+    sols = solvematrix(equation_map)
+    for item in sols:
+      a,b = divmod(item[0], dim)
+      if item[1] == 0:
+        playboard[a][b].mine = 2
+        updateKB(playboard,(a,b),dim,matrix,clicked)
+        print("used agent 2 to update safe: ",(a,b))
+      if item[1] == 1:
+        playboard[a][b].mine = 1
+        updateKB(playboard,(a,b),dim,matrix,clicked)
+        print("used agent 2 to update mine: ",(a,b))
 
-#def solveEqs(equation_map):
-#    #fill this
-#    #find variables
-#    return
-#
+    # for i in range (len(sols)):
+    #   a, b = divmod(sols[i][0], dim)
+    #   if sols[i][1]==0:
+    #       playboard[a][b].mine=2
+    
+    
+        
+    
+
+
 
 
 #need to call populateEQMap in main after strategy 2.1
