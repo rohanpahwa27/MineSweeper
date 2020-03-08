@@ -92,7 +92,7 @@ def play_minesweeper(dim,matrix,agent2_2):
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
-        if len(clicked)>dim/2:
+        if len(clicked)>dim/3:
             break
         # print("Random: ", (v,w))
     #pprint(agent2.populateEQMap(dim,playboard,set_of_coords))
