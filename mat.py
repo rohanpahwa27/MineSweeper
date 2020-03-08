@@ -58,8 +58,8 @@ def rref(matrix):
 				r+=1
 			if r == rows:
 				break
-	#print("-------------------FINAL RREF-------------------")
-	#pprint(matrix)
+	# print("-------------------FINAL RREF-------------------")
+	# pprint(matrix)
 #return matrix
 
 #run rref

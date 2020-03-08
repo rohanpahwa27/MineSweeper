@@ -1,4 +1,3 @@
-
 import numpy as np
 from dataclasses import dataclass
 import random
@@ -21,11 +20,17 @@ z = Matrix(A).rref()
 dim = 10
 matrixlen= 13
 rows = 9
-solList =[]
+
 p = Matrix(z[0])
 #print(p)
 #print( p.row(0).col(0))
 #convert to numpy array
+
+def norepeats(k,solList):
+    for i in solList:
+        if i[0] == k:
+            return False
+    return True
 
 def convertmatrix(rows, matrixlen, p):
     mat= np.empty([rows, matrixlen],dtype=int)
@@ -36,34 +41,55 @@ def convertmatrix(rows, matrixlen, p):
     return mat
 
 
-def matsolve(mat):
+def matsolve(mat,solList):
     for i in range (len(mat)):
         ones=[]
         negs=[]
+        opos = 0
+        oneg = 0
         sol=0
         for j in range (len(mat[0])-1):
             #print(mat[i][j])
             if mat[i][j]==1:
                 #print("hi")
                 ones.append(j)
-            if mat[i][j]== -1:
+            elif mat[i][j]== -1:
                 negs.append(j)
+            elif mat[i][j] > 1:
+                opos+=1
+            elif mat[i][j] < -1:
+                oneg +=1
+        # print("opos", opos)
+        # print("oneg", oneg)
+
         sol= mat[i][j+1]
         if len(ones) == 1 and sol == 1:
-            solList.append([ones[0], 1])
+            if norepeats(ones[0],solList):
+                solList.append([ones[0], 1])
             #set everthing else in the list equal to zeros
             for k in range (len(negs)):
-                solList.append([negs[k], 0])
-        if len(ones) == 1 and len(negs) == 0 and sol == 0:
-            solList.append([ones[0], 0])
-        if len(ones) == 0 and sol == 0 and len(negs)!= 0:
-            solList.append([ones[0], 1])
-            #set everthing else in the list equal to zeros
-            for k in range (len(negs)):
-                solList.append([negs[k], 0])
+                if norepeats(negs[k],solList):
+                    solList.append([negs[k], 0])
+        #if len(ones) == 1 and len(negs) == 0 and sol == 0:
+        if len(negs) == 0 and sol == 0:
+            for k in ones:
+                if norepeats(k,solList):
+                    solList.append([k,0])
+            # solList.append([ones[0], 0])
+        if len(ones) == 0 and sol == 0:
+        # if len(ones) == 0 and sol == 0 and len(negs)!= 0:
+            for k in negs:
+                if norepeats(k,solList):
+                    solList.append([k,0])
+            # solList.append([negs[0], 0])
+            # #set everthing else in the list equal to zeros
+            # for k in range (len(ones)):
+            #     solList.append([ones[k], 0])
         if len(ones) == 1 and sol == -1 and len(negs)== 1:
-            solList.append([ones[0], 0])
-            solList.append([negs[0], 1])
+            if norepeats(ones[0],solList):
+                solList.append([ones[0], 0])
+            if norepeats(negs[0],solList):
+                solList.append([negs[0], 1])
     # print (solList)
     return solList
 
@@ -91,34 +117,31 @@ def matsolved(mat):
 
 
 def solvematrix(mat):
+    solList = []
     prevmat= np.empty([len(mat),len(mat[0])], dtype=int)
     for i in range (len(mat)):
         for j in range (len(mat[0])):
             prevmat[i][j] = mat[i][j]
-            
-    solList = []
 
-    while matsolved(mat) == False:
-        # print ("matb4", mat)
-        solList = matsolve(mat)
-        mat = matsubs(mat, solList)
-        # print("prevmat", prevmat)
-        # print("mat", mat)
-        if  np.array_equal (prevmat, mat) ==True:
-            print("hi")
-            break
-        for i in range (len(mat)):
-            for j in range (len(mat[0])):
-                prevmat[i][j] = mat[i][j]
+    solList = matsolve(mat,solList)
+    # while matsolved(mat) == False:
+    #     # print ("matb4", mat)
+    #     solList = matsolve(mat,solList)
+    #     mat = matsubs(mat, solList)
+    #     # print("prevmat", prevmat)
+    #     # print("mat", mat)
+    #     if  np.array_equal (prevmat, mat) ==True:
+    #         print("hi")
+    #         break
+    #     for i in range (len(mat)):
+    #         for j in range (len(mat[0])):
+    #             prevmat[i][j] = mat[i][j]
     print (solList)
     return(solList)
 '''
-
 mat = matsubs(mat, solList)
 solList = matsolve(mat)
 #prevmat = 1
 mat = matsubs(mat, solList)
     #pprint("currmat ", mat)
 '''
-
-    #return equation_map
