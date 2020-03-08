@@ -1,10 +1,5 @@
 import numpy as np
 
-def isValid(dim,i, j):
-    if(i>=0 and i<dim and j>=0 and j<dim):
-        return True
-    return False
-
 #returns a list of all valid neighbors around a specific coordinate
 def getValidNeighbors(coord, dim):
     x = coord[0]
@@ -62,26 +57,25 @@ def updateKB(playboard, coord, dim, matrix, clicked):
             y = coords[1]
             playboard[x,y].numIdentMines+=1
             playboard[x,y].numHidden-=1
-
     else:
     #if coordinate is not a mine increase neighbors safe and decrease neighbors hidden
         playboard[x,y].mine = 2
         playboard[x,y].num = matrix[x,y]
         if (y,x) not in clicked:
             clicked.append((y,x))
-            print("updateKB appended", (x,y))
+            # print("updateKB appended", (x,y))
         list = getValidNeighbors((x,y), dim)
         for coords in list:
-            x = coords[0]
-            y = coords[1]
-            playboard[x,y].numSafe+=1
-            playboard[x,y].numHidden-=1
+            r = coords[0]
+            s = coords[1]
+            playboard[r,s].numSafe+=1
+            playboard[r,s].numHidden-=1
             if(playboard[x,y].num == 0):
-                playboard[x,y].mine = 2
-                playboard[x,y].num = matrix[x,y]
-                if (y,x) not in clicked:
-                    clicked.append((y,x))
-                    print("appended", (x,y))
+                playboard[r,s].mine = 2
+                playboard[r,s].num = matrix[r,s]
+                if (s,r) not in clicked:
+                    clicked.append((s,r))
+                    # print("appended", (r,s))
 
 #method that looks at a 0 coordinate and expands outwards until it hits a number in all directions
 def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords, clicked): #start has to be in format (i,j) as a tuple
@@ -115,7 +109,7 @@ def bfs_from_0(playboard, start, dim, matrix, knowledge_expanded, set_of_coords,
                 playboard[x,y].num = matrix[x,y]
                 if(y,x) not in clicked:
                     clicked.append((y,x))
-                    print("bfs appended", (x,y))
+                    # print("bfs appended", (x,y))
 
     return playboard
 
@@ -136,23 +130,23 @@ def createMine(dim, num_mines):
 #method to mark coordinates that satisfy condition numMines - numIdentMines = numHidden as flags
 def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked):
     list = getValidNeighbors((x,y), dim)
-    print("list",(x,y),list)
+    #print("list",(x,y),list)
     for coords in list:
         x = coords[0]
         y = coords[1]
         if (playboard[x,y].mine == 0):
-            print("turning into flag: ",(x,y))
+            # print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
             if (y,x) not in clicked:
                 clicked.append((y,x))
-                print("marked as appended", (x,y))
+                # print("marked as appended", (x,y))
 
             if (x,y) in set_of_coords:
                 set_of_coords.remove((x,y))
             if (x,y) not in knowledge_expanded:
                 updateKB(playboard, (x,y), dim, matrix, clicked)
                 knowledge_expanded.add((x,y))
-            print(playboard[x,y].mine)
+            # print(playboard[x,y].mine)
 
 #marking all neighbors that are safe as safe
 def set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix, clicked):
