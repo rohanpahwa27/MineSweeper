@@ -17,16 +17,10 @@ class KB():
     numSafe: int #num of surrounding safe squares
     numIdentMines: int #num of identified mines (should be <= num)
     numHidden: int #num of hidden squares
-         
-def get_answer_key():
-  
-    #fills a matrix of size dim*dim with num_mines many mines
-    print("Please enter the dimension of the size board you want to play on: ")
-    dim = int(input())
-    #dim = 10
-    print("Enter how many mines you want in the board: ")
-    num_mines = int(input())
-    #num_mines = 20
+
+def get_answer_key(dim, num_mines):
+
+
     matrix = createMine(dim, num_mines)
     #get the answer key board
     for i in range(0, dim):
@@ -37,10 +31,14 @@ def get_answer_key():
 
     print("---------ANSWER---------KEY---------")
     print(matrix)
-    return dim,matrix
+    return matrix
 
 
 def play_minesweeper(dim,matrix,agent2_2):
+
+    #keep track of flagged cells
+    flag_counter = 0
+
     #initialize a set of all the coordinates (concept of visited array, remove from this one you no longer need)
     clicked = []
     set_of_coords = set()
@@ -92,7 +90,7 @@ def play_minesweeper(dim,matrix,agent2_2):
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
-        if len(clicked)>dim/3:
+        if len(clicked)>dim/5:
             break
         # print("Random: ", (v,w))
     #pprint(agent2.populateEQMap(dim,playboard,set_of_coords))
@@ -136,7 +134,7 @@ def play_minesweeper(dim,matrix,agent2_2):
                 #this means the only spots that are left are mines
                 if (playboard[x,y].num - playboard[x,y].numIdentMines == playboard[x,y].numHidden):
                     #make all numHidden as flag and remove flags from set_coords
-                    mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked)
+                    flag_counter = mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked, flag_counter)
                     if (x,y) in set_of_coords:
                         set_of_coords.remove((x,y))
 
@@ -174,14 +172,14 @@ def play_minesweeper(dim,matrix,agent2_2):
 
                 # print("The length of clicked before is ", len(clicked))
                 # print("-------------------- start -----------------------")
-                agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded)
+                flag_counter = agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded, flag_counter)
                 # print("--------------------- end ------------------------")
                 # print("The length of clicked after is ", len(clicked))
                 # print("in main")
                 # pprint(set_of_coords)
 
             #generate a new random number
-            #if size > 0: 
+            #if size > 0:
             if prev_len == len(set_of_coords):
                 if (len(set_of_coords) > 0):
                     randCoord = set_of_coords.pop()
@@ -208,6 +206,9 @@ def play_minesweeper(dim,matrix,agent2_2):
 
     #print(agent2.populateEQMap(dim,playboard,set_of_coords))
     print("this is the FINAL LENGTH", len(clicked))
+    #print("PWEASE: ", flag_counter)
     # for obj in clicked:
     #     print(obj)
-    graphics.display_graphics(playboard, dim, clicked)
+    #graphics.display_graphics(playboard, dim, clicked)
+
+    return playboard, flag_counter

@@ -4,7 +4,7 @@ import pygame
 def display_graphics(matrix, dim, clicked):
     print(clicked)
     pygame.init()
-    
+
     #define variables
     swidth = int(600/dim)*dim
     width = int(swidth/dim)
@@ -23,14 +23,14 @@ def display_graphics(matrix, dim, clicked):
     mine_pic = pygame.transform.scale(mine_pic,(width-2,width-2))
     flag_pic = pygame.transform.scale(flag_pic,(width-2,width-2))
     font = pygame.font.SysFont("arial", width)
-    
+
     #set up drawing window
     screen = pygame.display.set_mode([swidth+20,swidth+20])
     screen.fill(white) #fill background with white
     pygame.display.set_caption("Game Board")
-    
+
     running = False
-    
+
     #draw grid
     pygame.draw.rect(screen, gray, (10,10,swidth,swidth))
     pygame.draw.rect(screen, black, (10,10,swidth,swidth),2)
@@ -50,16 +50,16 @@ def display_graphics(matrix, dim, clicked):
                 running = True  # Flag that we are done so we exit this loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 move+=1
-                if move < dim*dim:
-                    print(clicked[move][1], clicked[move][0])
-                else:
-                    print("done")
-    
+                #if move < dim*dim:
+                #     print(clicked[move][1], clicked[move][0])
+                # else:
+                #     print("done")
+
                 if move < dim*dim:
                     for m in range(move+1):
                         x = clicked[move][0]
                         y = clicked[move][1]
-                        
+
                         #set colors for numbers and display
                         if(matrix[y,x].num == 0):
                             color = black
@@ -91,9 +91,8 @@ def display_graphics(matrix, dim, clicked):
 
             # Limit to 60 frames per second
             clock.tick(60)
-            
+
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
     pygame.quit()
-

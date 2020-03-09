@@ -6,7 +6,7 @@ from pprint import pprint
 from matrix import *
 
 
-def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded):
+def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded, flag_counter):
     # print("THE SIZE OF EXPLORED IS FIRST", len(explored))
     # print("set_of_coords:")
     # pprint(explored)
@@ -22,7 +22,7 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded)
     #         boolshit.add((x,y))
     #     elif playboard[x,y].mine == 0:
     #         boolshit.add((x,y))
-    
+
     # for i in range(len(explored)):
     #     explored.pop()
 
@@ -82,21 +82,24 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded)
                 clicked.append((b,a))
                 # print("marked as appended", (a,b))
             updateKB(playboard,(a,b),dim,matrix,clicked)
-            print("used agent 2 to update safe: ",(a,b))
+            #print("used agent 2 to update safe: ",(a,b))
             if playboard[a,b].num == playboard[a,b].numIdentMines:
                 explored.remove((a,b))
         if item[1] == 1:
             playboard[a,b].mine = 3 #mark as a flag
+            flag_counter+=1
             #updateKB(playboard,(a,b),dim,matrix,clicked)
             if (b,a) not in clicked:
                 clicked.append((b,a))
                 # print("marked as appended", (a,b))
             updateKB(playboard,(a,b),dim,matrix,clicked)
-            print("used agent 2 to update mine: ",(a,b))
+            #print("used agent 2 to update mine: ",(a,b))
             explored.remove((a,b))
 
     for item in toberem:
         explored.remove(item)
+
+    return flag_counter
     # print("THE SIZE OF EXPLORED IS CURRENTLY", len(explored))
 
     #return explored
@@ -107,10 +110,10 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded)
     #   a, b = divmod(sols[i][0], dim)
     #   if sols[i][1]==0:
     #       playboard[a][b].mine=2
-    
-    
-        
-    
+
+
+
+
 
 
 
