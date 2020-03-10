@@ -1,14 +1,10 @@
 from pprint import pprint
 from test import *
 
-#matrix = np.array([[1,2,0,1,0,0], [0,0,0,3,0,0],[0,0,1,3,1,0],[0,0,0,0,0,1]], dtype = float)
-# matrix = np.array([[0,1,2], [1,2,1],[2,7,8]], dtype = float)
-#matrix = np.array([[0,1], [1,2],[0,5]], dtype = float)
-
+#find the reduced row echelon form of any matrix
 def rref(matrix):
-	# print("-------------------ORIGINAL MATRIX-------------------")
-	# pprint(matrix)
 
+	#determine the number of rows and columns
 	rows = matrix.shape[0]
 	cols = matrix.shape[1]
 
@@ -58,9 +54,3 @@ def rref(matrix):
 				r+=1
 			if r == rows:
 				break
-	# print("-------------------FINAL RREF-------------------")
-	# pprint(matrix)
-#return matrix
-
-#run rref
-#rref(matrix)

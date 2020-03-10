@@ -128,8 +128,10 @@ def createMine(dim, num_mines):
     return random_matrix
 
 #method to mark coordinates that satisfy condition numMines - numIdentMines = numHidden as flags
-def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked):
+def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix, clicked, flag_counter):
+
     list = getValidNeighbors((x,y), dim)
+    flags = len(list)
     #print("list",(x,y),list)
     for coords in list:
         x = coords[0]
@@ -137,6 +139,7 @@ def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix
         if (playboard[x,y].mine == 0):
             # print("turning into flag: ",(x,y))
             playboard[x,y].mine = 3
+            flag_counter+=1
             if (y,x) not in clicked:
                 clicked.append((y,x))
                 # print("marked as appended", (x,y))
@@ -147,6 +150,7 @@ def mark_as_flags(x,y, dim, set_of_coords, knowledge_expanded, playboard, matrix
                 updateKB(playboard, (x,y), dim, matrix, clicked)
                 knowledge_expanded.add((x,y))
             # print(playboard[x,y].mine)
+    return flag_counter
 
 #marking all neighbors that are safe as safe
 def set_hidden_to_safe(x,y, dim, playboard, knowledge_expanded, matrix, clicked):

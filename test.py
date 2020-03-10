@@ -14,11 +14,7 @@ def interchange(dim,mat,swap1, swap2):
         mat[swap1, i] = mat[swap2,i]
         mat[swap2, i] = val
 
-#multiply one row of a matrix by -1
-def multiply_neg(dim,mat,row):
-    for i in range(0, dim):
-        mat[row, i] *= -1
-
+#multiply one row of a matrix by a constant
 def multiply_const(dim,mat,constant,row):
 	for i in range(0,dim):
 		mat[row,i] *= constant

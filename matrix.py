@@ -2,29 +2,11 @@ import numpy as np
 from dataclasses import dataclass
 import random
 import pprint
-from scipy import linalg
-from sympy import *
+# from scipy import linalg
+# from sympy import *
 
 
-A = Matrix([[1,1,1,0,0,0,0,0,0,0,0,0,1],
-            [0,1,1,1,0,0,0,0,0,0,0,0,2],
-            [0,0,1,1,1,0,0,0,0,0,0,0,1],
-            [0,0,0,1,1,1,0,0,0,0,0,0,2],
-            [0,0,0,0,1,1,1,0,0,0,0,0,1],
-            [0,0,0,0,0,1,1,1,1,1,0,0,2],
-            [0,0,0,0,0,0,0,0,1,1,1,0,1],
-            [0,0,0,0,0,0,0,0,0,1,1,1,2],
-            [0,0,0,0,0,0,0,0,0,0,1,1,1]])
-#z= np.linalg.solve(A, b)
-z = Matrix(A).rref()
-dim = 10
-matrixlen= 13
-rows = 9
 
-p = Matrix(z[0])
-#print(p)
-#print( p.row(0).col(0))
-#convert to numpy array
 
 def norepeats(k,solList):
     for i in solList:
@@ -32,37 +14,32 @@ def norepeats(k,solList):
             return False
     return True
 
-def convertmatrix(rows, matrixlen, p):
-    mat= np.empty([rows, matrixlen],dtype=int)
-    for i in range(0, rows):
-        for j in range(0, matrixlen):
-            mat[i][j]=p.row(i).col(j).dot([1])
-    #pprint (mat)
-    return mat
+#convert to numpy array
+# def convertmatrix(rows, matrixlen, p):
+#     mat= np.empty([rows, matrixlen],dtype=int)
+#     for i in range(0, rows):
+#         for j in range(0, matrixlen):
+#             mat[i][j]=p.row(i).col(j).dot([1])
+#     return mat
 
 
 def matsolve(mat,solList):
     for i in range (len(mat)):
         ones=[]
         negs=[]
-        opos = 0
-        oneg = 0
         sol=0
-        for j in range (len(mat[0])-1):
-            #print(mat[i][j])
-            if mat[i][j]==1:
-                #print("hi")
-                ones.append(j)
-            elif mat[i][j]== -1:
-                negs.append(j)
-            elif mat[i][j] > 1:
-                opos+=1
-            elif mat[i][j] < -1:
-                oneg +=1
-        # print("opos", opos)
-        # print("oneg", oneg)
 
-        sol= mat[i][j+1]
+        #add all 1's and -1's to appropriate list
+        for j in range (len(mat[0])-1):
+            if mat[i][j]==1:
+                ones.append(j)
+            if mat[i][j]== -1:
+                negs.append(j)
+
+        #find the clue in the last column of the matrix
+        sol = mat[i][j+1]
+
+        #if there is only one variable with a coefficient of 1, and the clue = 1, then that variable = 1 and all other variables = 0
         if len(ones) == 1 and sol == 1:
             if norepeats(ones[0],solList):
                 solList.append([ones[0], 1])
@@ -70,27 +47,22 @@ def matsolve(mat,solList):
             for k in range (len(negs)):
                 if norepeats(negs[k],solList):
                     solList.append([negs[k], 0])
-        #if len(ones) == 1 and len(negs) == 0 and sol == 0:
+        #if there are no coefficients of -1 and the clue = 0, then all variables with coefficient 1 are also 0
         if len(negs) == 0 and sol == 0:
             for k in ones:
                 if norepeats(k,solList):
                     solList.append([k,0])
-            # solList.append([ones[0], 0])
+        #if there are no coefficients of 1 and the clue = 0, then all variables with coefficient -1 are also 0
         if len(ones) == 0 and sol == 0:
-        # if len(ones) == 0 and sol == 0 and len(negs)!= 0:
             for k in negs:
                 if norepeats(k,solList):
                     solList.append([k,0])
-            # solList.append([negs[0], 0])
-            # #set everthing else in the list equal to zeros
-            # for k in range (len(ones)):
-            #     solList.append([ones[k], 0])
-        if len(ones) == 1 and sol == -1 and len(negs)== 1:
+        #if there is only one variable with coefficient 1, one variable with coeff. -1, and the solution is -1, then the variable with coeff. 1 is 0 and the other variable is 1
+        if len(ones) == 1 and sol == -1 and len(negs)== 1: # can this change to: if sol == -1 and len(negs)== 1:
             if norepeats(ones[0],solList):
                 solList.append([ones[0], 0])
             if norepeats(negs[0],solList):
                 solList.append([negs[0], 1])
-    # print (solList)
     return solList
 
 def matsubs(mat, solList):
@@ -105,8 +77,8 @@ def matsubs(mat, solList):
             if mat[j][solList[i][0]]!=0:
                 mat[j][len(mat[0])-1] = mat[j][len(mat[0])-1] + l
                 mat[j][solList[i][0]]= 0
-    #pprint( mat)
     return mat
+
 #check if the matrix is solved
 def matsolved(mat):
     for i in range (len(mat)):
@@ -136,12 +108,6 @@ def solvematrix(mat):
     #     for i in range (len(mat)):
     #         for j in range (len(mat[0])):
     #             prevmat[i][j] = mat[i][j]
-    print (solList)
     return(solList)
-'''
-mat = matsubs(mat, solList)
-solList = matsolve(mat)
-#prevmat = 1
-mat = matsubs(mat, solList)
-    #pprint("currmat ", mat)
-'''
+
+
