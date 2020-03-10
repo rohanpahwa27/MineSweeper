@@ -65,7 +65,6 @@ def play_minesweeper(dim,matrix,agent2_2):
     playboard[v,w].num = matrix[v,w]
     if (w,v) not in clicked:
         clicked.append((w,v))
-        # print("appended", (v,w))
     #update the knowledge base (playboard) based on if it is a 9(mine) or not
     if (matrix[v,w] != 0):
         if (matrix[v,w] == 9):
@@ -77,7 +76,6 @@ def play_minesweeper(dim,matrix,agent2_2):
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
-    # print("random",(v,w))
 
     #keep clicking spots in the initial part of the game until you get a 0 so that you can expand safely from there
     while(matrix[v,w] != 0):
@@ -86,23 +84,17 @@ def play_minesweeper(dim,matrix,agent2_2):
         playboard[v,w].num = matrix[v,w]
         if (w,v) not in clicked:
             clicked.append((w,v))
-            # print("appended", (v,w))
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
         if len(clicked)>dim/5:
             break
-        # print("Random: ", (v,w))
-    #pprint(agent2.populateEQMap(dim,playboard,set_of_coords))
 
     #use this method to expand all the safe neighbors from the coordinate that has a 0 value
     #all values around a 0 are safe
     if playboard[v,w].num == 0:
         playboard = bfs_from_0(playboard,(v,w), dim, matrix, knowledge_expanded, set_of_coords, clicked)
 
-    # for i in range(0,dim):
-    #     for j in range(0,dim):
-    #         print((i,j), playboard[i,j])
 
     deep_copy = set()
     for coords in set_of_coords:
@@ -117,12 +109,8 @@ def play_minesweeper(dim,matrix,agent2_2):
     #while size>0:
 
     while(len(set_of_coords)>0):
-        #graphics.display_graphics(playboard, dim)
-
         prev_len = len(set_of_coords)
-        # prev_len = size
-        # print("SIZE", size)
-        # print("prev", prev_len)
+
 
         #deep_copy is same as set_of_coords
         for coords in deep_copy:
@@ -162,21 +150,14 @@ def play_minesweeper(dim,matrix,agent2_2):
 
 
 
-
+        #run agent 2 if specified in parameters
         if(prev_len == len(set_of_coords)):
             if agent2_2 == True:
-            #if prev_len == size:
                 prev_len = len(set_of_coords)
-                # print("here")
                 counter+=1
 
-                # print("The length of clicked before is ", len(clicked))
-                # print("-------------------- start -----------------------")
                 flag_counter = agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded, flag_counter)
-                # print("--------------------- end ------------------------")
-                # print("The length of clicked after is ", len(clicked))
-                # print("in main")
-                # pprint(set_of_coords)
+
 
             #generate a new random number
             #if size > 0:
@@ -186,10 +167,8 @@ def play_minesweeper(dim,matrix,agent2_2):
                     set_of_coords.add(randCoord)
                 v = randCoord[0]
                 w = randCoord[1]
-                #playboard[v,w].num = matrix[v,w]
                 if (w,v) not in clicked:
                     clicked.append((w,v))
-                    # print("randomly appended", (v,w))
                 if (v,w) not in knowledge_expanded:
                     updateKB(playboard,(v,w), dim, matrix, clicked)
                     knowledge_expanded.add((v,w))
@@ -197,18 +176,8 @@ def play_minesweeper(dim,matrix,agent2_2):
                     if(playboard[v,w].num == playboard[v,w].numIdentMines or playboard[v,w].mine == 1):
                         set_of_coords.remove((v,w))
 
-
-    # for i in range(0,dim):
-    #     for j in range(0,dim):
-    #         if (i,j) in set_of_coords:
-    #             print((i,j), playboard[i,j])
-
-
-    #print(agent2.populateEQMap(dim,playboard,set_of_coords))
-    print("this is the FINAL LENGTH", len(clicked))
-    #print("PWEASE: ", flag_counter)
-    # for obj in clicked:
-    #     print(obj)
-    #graphics.display_graphics(playboard, dim, clicked)
+    
+    #this displays the board using pygame
+    graphics.display_graphics(playboard, dim, clicked)
 
     return playboard, flag_counter

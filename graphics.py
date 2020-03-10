@@ -2,7 +2,6 @@ import pygame
 
 #DISPLAY GRAPHICS
 def display_graphics(matrix, dim, clicked):
-    print(clicked)
     pygame.init()
 
     #define variables
@@ -50,10 +49,6 @@ def display_graphics(matrix, dim, clicked):
                 running = True  # Flag that we are done so we exit this loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 move+=1
-                #if move < dim*dim:
-                #     print(clicked[move][1], clicked[move][0])
-                # else:
-                #     print("done")
 
                 if move < dim*dim:
                     for m in range(move+1):
