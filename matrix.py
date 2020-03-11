@@ -95,19 +95,18 @@ def solvematrix(mat):
         for j in range (len(mat[0])):
             prevmat[i][j] = mat[i][j]
 
-    solList = matsolve(mat,solList)
-    # while matsolved(mat) == False:
-    #     # print ("matb4", mat)
-    #     solList = matsolve(mat,solList)
-    #     mat = matsubs(mat, solList)
-    #     # print("prevmat", prevmat)
-    #     # print("mat", mat)
-    #     if  np.array_equal (prevmat, mat) ==True:
-    #         print("hi")
-    #         break
-    #     for i in range (len(mat)):
-    #         for j in range (len(mat[0])):
-    #             prevmat[i][j] = mat[i][j]
+    #solList = matsolve(mat,solList)
+    while matsolved(mat) == False:
+        # print ("matb4", mat)
+        solList = matsolve(mat,solList)
+        mat = matsubs(mat, solList)
+        # print("prevmat", prevmat)
+        # print("mat", mat)
+        if  np.array_equal (prevmat, mat) ==True:
+            #print("hi")
+            break
+        for i in range (len(mat)):
+            for j in range (len(mat[0])):
+                prevmat[i][j] = mat[i][j]
+    #print("solList", solList)
     return(solList)
-
-

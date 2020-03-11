@@ -1,5 +1,18 @@
 import numpy as np
 
+
+
+
+def findBombs(playboard):
+    mines = 0
+    for i in range(len(playboard)):
+        for j in range(len(playboard[i])):
+            if playboard[i][j].mine == 1  or playboard[i][j].mine == 3:
+                mines+=1
+    return mines
+
+
+
 #returns a list of all valid neighbors around a specific coordinate
 def getValidNeighbors(coord, dim):
     x = coord[0]
