@@ -23,6 +23,10 @@ agent1_scores = []
 agent2_scores = []
 agent3_scores = []
 
+agent1_times = []
+agent2_times = []
+agent3_times = []
+
 
 #testing for data
 dim = 15
@@ -31,31 +35,38 @@ while num_mines <= 225:
     flags_a1 = 0
     flags_a2 = 0
     flags_a3 = 0
+    timer1=0
+    timer2=0
+    timer3=0
     for i in range(0,5):
-	    matrix = get_answer_key(dim, num_mines)
-	    #run without agent 2
-	    playboard1, flags1 = play_minesweeper(dim,matrix,num_mines,False,0)
-	    for i in range(0,dim):
-	        for j in range(0, dim):
-	            if(playboard1[i,j].mine == 3):
-	                flags_a1+=1
-
-	    #run with agent2
-	    playboard2, flags2 = play_minesweeper(dim,matrix,num_mines,True,0)
-	    for i in range(0,dim):
-	        for j in range(0, dim):
-	            if(playboard2[i,j].mine == 3):
-	                flags_a2+=1
+        matrix = get_answer_key(dim, num_mines)
+        #run without agent2
+        t1_start = time.time()
+        playboard1, flags1 = play_minesweeper(dim,matrix,num_mines,False,0)
+        t1_end = time.time()
+        for i in range(0,dim):
+            for j in range(0, dim):
+                if(playboard1[i,j].mine == 3):
+                    flags_a1+=1
+        timer1+=1
+        #run with agent2
+        playboard2, flags2 = play_minesweeper(dim,matrix,num_mines,True,0)
+        for i in range(0,dim):
+            for j in range(0, dim):
+                if(playboard2[i,j].mine == 3):
+                    flags_a2+=1
+                    
         #run with agent3
-	    playboard3, flags3 = play_minesweeper(dim,matrix,num_mines,True,3)
-	    for i in range(0,dim):
-	        for j in range(0, dim):
-	            if(playboard3[i,j].mine == 3):
-	                flags_a3+=1
+        playboard3, flags3 = play_minesweeper(dim,matrix,num_mines,True,3)
+        for i in range(0,dim):
+            for j in range(0, dim):
+                if(playboard3[i,j].mine == 3):
+                    flags_a3+=1
     #add as a tuple as density vs flag success rate
     agent1_scores.append((num_mines/225, float(flags_a1/(num_mines*5))))
     agent2_scores.append((num_mines/225, float(flags_a2/(num_mines*5))))
     agent3_scores.append((num_mines/225, float(flags_a3/(num_mines*5))))
+    agent1_times.append((num_mines, float(timer1/5)))
 
     print("MINES ", num_mines)
     num_mines+=15
