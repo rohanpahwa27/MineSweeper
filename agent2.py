@@ -6,16 +6,27 @@ from pprint import pprint
 from matrix import *
 
 
-def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded, flag_counter,num_mines,agent):
+def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded, flag_counter, num_mines, agent3):
     #make a row of dim*dim+1 zeros
     equation_map = np.zeros((1,dim*dim+1)) #zeros in format of (# rows, # columns)
     rows = 0
     toberem = []
 
+    #if agent 3 is called, add a boundary condition using number of mines remaining
+    if agent3:
+        equation_map[0][dim*dim] = num_mines - findBombs(playboard)
+
     #go through each element of set_of_coords
     for val in explored:
         x = val[0]
         y = val[1]
+
+        #if agent 3 is called, add a boundary condition using number of mines remaining
+        if agent3:
+            if playboard[x,y].mine == 0:
+                equation_map[0][dim*x+y] = 1
+            if rows == 0:
+                rows += 1
 
         #if item in explored set is safe, add its numMines to end of row in eq_map, then examine its neighbors
         if playboard[x,y].mine==2:
@@ -38,19 +49,7 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded,
                 if(playboard[x,y].mine == 0):
                     equation_map[rows,dim*x+y] = 1
             rows+=1
-    #print("eqmap b4 ", equation_map)
-    if agent==3:
-    #add final rows
-    #initialize final row
-        equation_map = np.append(equation_map, np.zeros((1,dim*dim+1)),axis = 0)
-    # go through the board and find all the empty square
-        for k in range(len(playboard)):
-            for j in range(len(playboard[k-1])):
-                if playboard[k][j].mine==0:
-                    equation_map[rows][dim*k+j]=1
-        equation_map[rows][dim*dim]= num_mines-findBombs(playboard)
-        print("agent 3 in agent 2:", num_mines-findBombs(playboard))
-
+   
 
     #reduce row echelon equation_map, and then solve for values of variables (can only be 0 or 1)
     rref_equation_map = rref(equation_map)
@@ -87,3 +86,5 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded,
         explored.remove(item)
 
     return flag_counter
+
+

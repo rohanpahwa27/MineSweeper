@@ -81,13 +81,16 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
     while(matrix[v,w] != 0):
         v = random.randint(0,dim-1)
         w = random.randint(0,dim-1)
-        playboard[v,w].num = matrix[v,w]
+        if (matrix[v,w] == 9):
+            set_of_coords.remove((v,w))
+        # else:
+        #     playboard[v,w].num = matrix[v,w]
         if (w,v) not in clicked:
             clicked.append((w,v))
         if (v,w) not in knowledge_expanded:
             updateKB(playboard,(v,w), dim, matrix, clicked)
             knowledge_expanded.add((v,w))
-        if len(clicked)>dim/5:
+        if len(clicked)>1:
             break
 
     #use this method to expand all the safe neighbors from the coordinate that has a 0 value
@@ -148,58 +151,38 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
             deep_copy.add(coords)
             #check for size of set if same
 
+        #run agent 3 if specified in parameters
+            if agent3:
+                if findBombs(playboard) == num_mines:
+                    finishBoard(set_of_coords,playboard,matrix,clicked,True)
+                    break
+                if num_mines - findBombs(playboard) == len(set_of_coords):
+                    finishBoard(set_of_coords,playboard,matrix,clicked,False)
+                    break
 
 
         #run agent 2 if specified in parameters
         if(prev_len == len(set_of_coords)):
+
+            #run agent 2 if specified in parameters
             if agent2_2 == True:
                 prev_len = len(set_of_coords)
                 counter+=1
-                flag_counter = agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded, flag_counter,num_mines,agent3)
+                if agent3:
+                    flag_counter = agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded, flag_counter,num_mines,True)
+                else:
+                    flag_counter = agent2.populateEQMap(dim, playboard, set_of_coords, matrix, clicked, knowledge_expanded, flag_counter,num_mines,False)
+
 
             #run agent 3 if specified in parameters
-            if agent3 == 3:
+            if agent3:
                 if findBombs(playboard) == num_mines:
-                    print("entered agent 3")
-                    for item in set_of_coords:
-                        x = item[0]
-                        y = item[1]
-                        playboard[x,y].mine = 2
-                        playboard[x,y].num = matrix[x,y]
-                        clicked.append(item)
+                    finishBoard(set_of_coords,playboard,matrix,clicked,True)
                     break
                 if num_mines - findBombs(playboard) == len(set_of_coords):
-                    print("entered agent 3")
-                    for item in set_of_coords:
-                        x = item[0]
-                        y = item[1]
-                        playboard[x,y].mine = 3
-                        clicked.append(item)
+                    finishBoard(set_of_coords,playboard,matrix,clicked,False)
                     break
-                # tempset= set_of_coords.copy()
-                # if agent3 ==3:
-                #     if findBombs(playboard) == num_mines:
-                #         for item in tempset:
-                #             x=item[0]
-                #             y=item[1]
-                #             playboard[x,y].mine = 1
-                #             playboard[x,y].num = 1
-                #             clicked.append(item)
-                #             if item in set_of_coords== True:
-                #                 set_of_coords.remove(item)
-                #     #print("bombs exist", findBombs(playboard))
-                #     print("remainmines",num_mines-findBombs(playboard))
-                #     print("remainig spaces",len(set_of_coords))
-                #     if num_mines-findBombs(playboard)== len(set_of_coords):
-                #         print("umade it")
-                #         for item in tempset:
-                #             x=item[0]
-                #             y=item[1]
-                #             playboard[x,y].mine = 2
-                #             clicked.append(item)
-                #             if item in set_of_coords== True:
-                #                 set_of_coords.remove(item)
-                #         #go through the playboard and mark all hidden spaces as safel
+                    
 
             #generate a new random number
             #if size > 0:
@@ -218,8 +201,8 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
                     if(playboard[v,w].num == playboard[v,w].numIdentMines or playboard[v,w].mine == 1):
                         set_of_coords.remove((v,w))
 
-
+    
     #this displays the board using pygame
-    #graphics.display_graphics(playboard, dim, clicked)
+    graphics.display_graphics(playboard, dim, clicked)
 
     return playboard, flag_counter
