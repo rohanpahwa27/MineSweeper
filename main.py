@@ -6,7 +6,6 @@ import random
 import pygame
 from pprint import pprint
 import graphics
-import graphicsAk
 import agent2
 from func import *
 
@@ -83,8 +82,6 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
         w = random.randint(0,dim-1)
         if (matrix[v,w] == 9):
             set_of_coords.remove((v,w))
-        # else:
-        #     playboard[v,w].num = matrix[v,w]
         if (w,v) not in clicked:
             clicked.append((w,v))
         if (v,w) not in knowledge_expanded:
@@ -203,6 +200,6 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
 
     
     #this displays the board using pygame
-    #graphics.display_graphics(playboard, dim, clicked)
+    graphics.display_graphics(playboard, dim, clicked)
 
     return playboard, flag_counter

@@ -80,15 +80,21 @@ def solvematrix(mat):
         for j in range (len(mat[0])):
             prevmat[i][j] = mat[i][j]
 
-    #solList = matsolve(mat,solList)
-    while matsolved(mat) == False:
-        solList = matsolve(mat,solList)
-        mat = matsubs(mat, solList)
-        if  np.array_equal (prevmat, mat) ==True:
-            break
-        for i in range (len(mat)):
-            for j in range (len(mat[0])):
-                prevmat[i][j] = mat[i][j]
+    solList = matsolve(mat,solList)
+    # ctr = 0
+    # while matsolved(mat) == False:
+    #     ctr+=1
+    #     print(ctr)
+    #     if(ctr>4):
+    #         break
+        
+    #     solList = matsolve(mat,solList)
+    #     mat = matsubs(mat, solList)
+    #     if  np.array_equal (prevmat, mat) ==True:
+    #         break
+    #     for i in range (len(mat)):
+    #         for j in range (len(mat[0])):
+    #             prevmat[i][j] = mat[i][j]
     return(solList)
 
 
