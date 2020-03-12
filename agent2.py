@@ -1,5 +1,4 @@
 import numpy as np
-#import sympy as sp
 from func import *
 from mat import rref
 from pprint import pprint
@@ -65,7 +64,6 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded,
 
         #if coordinate returns a 0, it is safe, so reveal the clue, update neighbors, and remove from explored
         if item[1] == 0:
-            print("Agent 2",(a,b))
             playboard[a,b].mine = 2
             playboard[a,b].num = matrix[a,b]
             if (b,a) not in clicked:
@@ -75,7 +73,6 @@ def populateEQMap(dim, playboard, explored, matrix, clicked, knowledge_expanded,
                 explored.remove((a,b))
         #if coordinate returns a 1, it is a mine, so flag it, update neighbors, and remove from explored
         if item[1] == 1:
-            print("Agent 2",(a,b))
             playboard[a,b].mine = 3 #mark as a flag
             flag_counter+=1
             if (b,a) not in clicked:

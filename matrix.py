@@ -2,27 +2,17 @@ import numpy as np
 from dataclasses import dataclass
 import random
 import pprint
-# from scipy import linalg
-# from sympy import *
 
 
 
-
+#make sure no elements repeat in a list
 def norepeats(k,solList):
     for i in solList:
         if i[0] == k:
             return False
     return True
 
-#convert to numpy array
-# def convertmatrix(rows, matrixlen, p):
-#     mat= np.empty([rows, matrixlen],dtype=int)
-#     for i in range(0, rows):
-#         for j in range(0, matrixlen):
-#             mat[i][j]=p.row(i).col(j).dot([1])
-#     return mat
-
-
+#solve the given matrix
 def matsolve(mat,solList):
     for i in range (len(mat)):
         ones=[]
@@ -68,12 +58,7 @@ def matsolve(mat,solList):
 def matsubs(mat, solList):
     for i in range (len(solList)):
         for j in range (len(mat)):
-            '''
-            print("index ", j,solList[i][0])
-            print("------------------------------------------------")
-            '''
             l = (-1)*solList[i][1]*mat[j][solList[i][0]]
-            #print(mat[j][len(mat[0])-1])
             if mat[j][solList[i][0]]!=0:
                 mat[j][len(mat[0])-1] = mat[j][len(mat[0])-1] + l
                 mat[j][solList[i][0]]= 0
@@ -95,19 +80,15 @@ def solvematrix(mat):
         for j in range (len(mat[0])):
             prevmat[i][j] = mat[i][j]
 
-    solList = matsolve(mat,solList)
-    # while matsolved(mat) == False:
-    #     # print ("matb4", mat)
-    #     solList = matsolve(mat,solList)
-    #     mat = matsubs(mat, solList)
-    #     # print("prevmat", prevmat)
-    #     # print("mat", mat)
-    #     if  np.array_equal (prevmat, mat) ==True:
-    #         print("hi")
-    #         break
-    #     for i in range (len(mat)):
-    #         for j in range (len(mat[0])):
-    #             prevmat[i][j] = mat[i][j]
+    #solList = matsolve(mat,solList)
+    while matsolved(mat) == False:
+        solList = matsolve(mat,solList)
+        mat = matsubs(mat, solList)
+        if  np.array_equal (prevmat, mat) ==True:
+            break
+        for i in range (len(mat)):
+            for j in range (len(mat[0])):
+                prevmat[i][j] = mat[i][j]
     return(solList)
 
 

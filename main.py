@@ -203,6 +203,6 @@ def play_minesweeper(dim,matrix,num_mines,agent2_2,agent3):
 
     
     #this displays the board using pygame
-    graphics.display_graphics(playboard, dim, clicked)
+    #graphics.display_graphics(playboard, dim, clicked)
 
     return playboard, flag_counter

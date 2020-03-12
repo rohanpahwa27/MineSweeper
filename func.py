@@ -184,6 +184,7 @@ def countMines(x, y, matrix, dim):
 
     return num_mines_around
 
+#if agent 3 is called, immediately complete the board
 def finishBoard(set_of_coords,playboard,matrix,clicked,safe):
     for item in set_of_coords:
         x = item[0]
@@ -193,6 +194,7 @@ def finishBoard(set_of_coords,playboard,matrix,clicked,safe):
             playboard[x,y].num = matrix[x,y]
         else:
             playboard[x,y].mine = 3
-        clicked.append((y,x))
+        if (y,x) not in clicked:
+            clicked.append((y,x))
     set_of_coords.clear()
 
